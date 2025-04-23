@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-
 const reqString = { type: String, required: true, default: "" };
 
 const restaurantSchema = new Schema({
@@ -10,6 +9,18 @@ const restaurantSchema = new Schema({
     default: [],
   },
   demigod: reqString,
+  tables: [
+    {
+      number: { type: Number, required: true, default: 1 },
+      people: { type: Number, required: true, default: 1 },
+      reservedDates: [
+        {
+          date: reqString,
+          time: reqString,
+        },
+      ],
+    },
+  ],
 });
 
 const Restaurant =
