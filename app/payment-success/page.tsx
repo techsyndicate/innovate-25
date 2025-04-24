@@ -26,7 +26,6 @@ export default function PaymentSuccess() {
           }
         });
     } else {
-      console.error("No session ID provided.");
       setPaymentStatus("No session ID provided.");
     }
   }, [sessionId]);

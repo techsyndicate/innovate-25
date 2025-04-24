@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDb from "@/utils/connectDb";
 import User from "@/models/userSchema";
 import Restaurant from "@/models/restaurantSchema";
+import Card from "@/models/cardSchema";
 
 function checkTimeBound(reservedTime: string, givenTime: string): boolean {
   const toMinutes = (time: string): number => {
@@ -16,20 +17,20 @@ function checkTimeBound(reservedTime: string, givenTime: string): boolean {
 
   return diff <= 120 || diff >= 1440 - 120;
 }
+
 export async function POST(request: NextRequest) {
   try {
     await connectDb();
 
-    const { email, restaurant, date, time, people } = await request.json();
+    const { userId, restaurant, date, time, people } = await request.json();
 
-    const reqUser = await User.findOne({ email: email });
+    const reqUser = await User.findById(userId);
     if (!reqUser) {
       return NextResponse.json(
         { message: "User not found", success: false },
         { status: 404 }
       );
     }
-
     const reqRestaurant = await Restaurant.findOne({ name: restaurant });
     if (!reqRestaurant) {
       return NextResponse.json(
@@ -37,50 +38,48 @@ export async function POST(request: NextRequest) {
         { status: 404 }
       );
     }
-
-    let foundTable;
-
-    for (let i = 0; i < reqRestaurant.tables.length; i++) {
-      console.log(i);
-      if (reqRestaurant.tables[i].people == people) {
-        foundTable = reqRestaurant.tables[i];
-        for (let j = 0; j < reqRestaurant.tables[i].reservedDates.length; j++) {
-          if (
-            reqRestaurant.tables[i].reservedDates[j].date === date &&
-            checkTimeBound(reqRestaurant.tables[i].reservedDates[j].time, time)
-          ) {
-            return NextResponse.json(
-              {
-                message: "Table already reserved for this date and time",
-                success: false,
-              },
-              { status: 400 }
-            );
-          }
-        }
-      }
-    }
-    if (!foundTable) {
+    const reqCard = await Card.findOne({ uid: reqUser._id });
+    if (!reqCard) {
       return NextResponse.json(
-        {
-          message: "No table available for this number of people",
-          success: false,
-        },
-        { status: 400 }
+        { message: "Card not found", success: false },
+        { status: 404 }
       );
     }
 
+    for (let i = 0; i < reqRestaurant.tables.length; i++) {
+      if (reqRestaurant.tables[i].people == people) {
+        reqRestaurant.tables[i].reservedDates.push({ date, time });
+        await reqRestaurant.save();
+
+        reqCard.reservations.push({
+          restaurant,
+          date,
+          time,
+          people,
+          tableNumber: i + 1,
+        });
+        await reqCard.save();
+        return NextResponse.json(
+          {
+            message: "Table reserved successfully",
+            success: true,
+          },
+          { status: 200 }
+        );
+      }
+    }
+
     return NextResponse.json(
-      { message: "Table available", success: true },
-      { status: 200 }
+      {
+        message: "No table available for this number of people",
+        success: false,
+      },
+      { status: 400 }
     );
   } catch (error) {
     console.log(error);
     return NextResponse.json(
-      {
-        message: "An error occurred while checking reservation.",
-        success: false,
-      },
+      { message: "An error occurred while reserving the table." },
       { status: 500 }
     );
   }

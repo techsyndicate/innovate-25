@@ -1,12 +1,55 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { PacmanLoader } from "react-spinners";
+import "notyf/notyf.min.css";
+import { Notyf } from "notyf";
+import { MongoUser } from "@/types/MongoUser";
 
 function Reserve() {
+  const { isLoaded, user } = useUser();
+  const router = useRouter();
+  const [mongoUser, setMongoUser] = useState({} as MongoUser);
+  const [mongoUserLoading, setMongoUserLoading] = useState(true);
   const [restaurant, setRestaurant] = useState("");
   const [people, setPeople] = useState("1");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [time, setTime] = useState("00:01");
   const [number, setNumber] = useState("1");
+  const [available, setAvailable] = useState(false);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    fetch("/api/getUser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: user?.primaryEmailAddress?.emailAddress }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.user) {
+          setMongoUserLoading(false);
+          setMongoUser(data.user);
+        } else {
+          console.error("An error occured while fetching user.");
+          setMongoUserLoading(false);
+          return router.push("/sign-in");
+        }
+      });
+  }, [isLoaded, user]);
+
+  if (!isLoaded || mongoUserLoading) {
+    return (
+      <div className="flex flex-col w-[100%] h-[100vh] items-center justify-center">
+        <PacmanLoader className="justify-center items-center" color="#651DFF" />
+      </div>
+    );
+  }
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setRestaurant(event.target.value);
@@ -65,7 +108,7 @@ function Reserve() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: "",
+          email: mongoUser.email,
           restaurant,
           date,
           time,
@@ -76,12 +119,42 @@ function Reserve() {
         .then((data) => {
           if (data.success) {
             alert("Table available!");
+            setAvailable(true);
           } else {
             alert(data.message);
           }
         });
     } else {
       alert("Please fill in all fields.");
+    }
+  };
+
+  const handleReserve = () => {
+    if (available) {
+      fetch("/api/reserve", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: mongoUser._id,
+          restaurant,
+          date,
+          time,
+          people,
+          number,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            alert("Reservation successful!");
+          } else {
+            alert(data.message);
+          }
+        });
+    } else {
+      alert("Please check availability before reserving.");
     }
   };
 
@@ -154,7 +227,13 @@ function Reserve() {
       <br />
       <button onClick={handleCheck}>Check for availability</button>
       <br />
-      <button>Reserve</button> {/* Add functionality for reserve on click. */}
+      {available && (
+        <div>
+          <h1>RESERVE A TABLE</h1>
+          <button onClick={handleReserve}>Reserve</button>
+        </div>
+      )}
+      <br />
     </div>
   );
 }
