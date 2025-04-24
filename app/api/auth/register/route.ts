@@ -20,6 +20,7 @@ export async function POST(request: NextRequest) {
     const newUser = new User({ email, clerkId, name });
     const newCard = new Card({ uid: newUser._id });
     await newCard.save();
+    newUser.card = newCard._id;
     await newUser.save();
     return NextResponse.json(
       { message: "User created", user: newUser },
