@@ -64,7 +64,6 @@ function Reserve() {
   };
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
     const date = new Date();
     const selectedDate = new Date(event.target.value);
     if (selectedDate < date) {
