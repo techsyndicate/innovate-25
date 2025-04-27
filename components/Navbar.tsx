@@ -42,6 +42,7 @@ function Navbar() {
       <img
         src="./navbar/gradient.svg"
         className="fixed bottom-0 left-[0vw] z-[-5]"
+        style={{ pointerEvents: "none" }}
         alt=""
       />
     </div>
