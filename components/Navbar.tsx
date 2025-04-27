@@ -9,7 +9,7 @@ function Navbar() {
       <div className="fixed z-[15] w-[100vw] bottom-0">
         <img
           src="./navbar/cross.svg"
-          className="absolute bottom-[43.4vh] z-[14] w-[10vw] pointer-cursor"
+          className="absolute bottom-[78vw] left-[3vw] z-[14] w-[10vw] pointer-cursor"
           alt=""
           onClick={() => setShowCard(!showCard)}
         />
@@ -19,7 +19,7 @@ function Navbar() {
           style={{ pointerEvents: "none" }}
           alt=""
         />
-        <div className="absolute bottom-[31vh] left-[12vw] z-[11]">
+        <div className="absolute bottom-[53.1vw] left-[12vw] z-[11]">
           <h1
             style={{
               fontFamily: "var(--font-mantinia)",
