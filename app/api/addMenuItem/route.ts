@@ -6,8 +6,16 @@ export async function POST(request: NextRequest) {
   try {
     await connectDb();
 
-    const { name, item, price, rating, bestseller, description, veg } =
-      await request.json();
+    const {
+      name,
+      item,
+      price,
+      rating,
+      bestseller,
+      description,
+      veg,
+      mealType,
+    } = await request.json();
 
     const existingRestaurant = await Restaurant.findOne({ name });
     if (!existingRestaurant) {
@@ -27,6 +35,7 @@ export async function POST(request: NextRequest) {
             bestseller: bestseller,
             veg: veg,
             description: description,
+            mealType: mealType,
           },
         },
       },

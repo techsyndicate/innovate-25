@@ -3,7 +3,7 @@ import React from "react";
 
 function Navbar() {
   return (
-    <div className="absolute bottom-[7vh] left-[10vw]">
+    <div className="fixed z-[2] bottom-[7vh] left-[10vw]">
       <div className="relative ">
         <img src="./navbar/nav.svg" className="w-[80vw] " alt="" />
         <div className="flex flex-row justify-between absolute top-[-1.563vh] w-[60vw] left-[10vw]">

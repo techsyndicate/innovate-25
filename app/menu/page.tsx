@@ -1,20 +1,26 @@
 "use client";
 
 import Header from "@/components/Header";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
+import MenuItemCard from "@/components/MenuItemCard";
 
 function Menu() {
-  const [item, setItem] = useState("");
-  const [price, setPrice] = useState(0);
-  const [restaurant, setRestaurant] = useState(
-    "Morgott’s Omen King Tandoor, Chandigarh"
-  );
-  const [location, setLocation] = useState("");
-  const [demigod, setDemigod] = useState("");
+  const [restaurant, setRestaurant] = useState("Morgott’s Omen King Tandoor");
   const [veg, setVeg] = useState("both");
   const [filterByRating, setFilterByRating] = useState(false);
   const [bestseller, setBestseller] = useState(false);
+  const [menu, setMenu] = useState([]);
+
+  const handleVeg = () => {
+    if (veg == "both") {
+      return "both";
+    } else if (veg == "veg") {
+      return "veg";
+    } else if (veg == "non-veg") {
+      return "non-veg";
+    }
+  };
 
   const handleVegChange = () => {
     if (veg == "both") {
@@ -26,72 +32,38 @@ function Menu() {
     }
   };
 
-  const handleItemChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setItem(e.target.value);
-  };
-
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPrice(parseFloat(e.target.value));
-  };
-
-  const handleRestaurantChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRestaurant(e.target.value);
-  };
-
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value);
-  };
-
-  const handleDemigodChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDemigod(e.target.value);
-  };
-
-  const handleAddRestaurant = () => {
-    console.log("here");
-    if (restaurant && location && demigod) {
-      fetch("/api/addRestaurant", {
+  const getMenu = async () => {
+    try {
+      const response = await fetch("/api/getMenu", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name: restaurant, location, demigod }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            alert("Restaurant added successfully!");
-          } else {
-            alert("Failed to add restaurant.");
-          }
-        });
-    } else {
-      alert("Please fill in all fields.");
+        body: JSON.stringify({
+          name: restaurant,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setMenu(data.menu);
+        for (let i = 0; i < data.menu.length; i++) {
+          data.menu[i].quantity = 0;
+        }
+        console.log(data.menu);
+      } else {
+        alert("Failed to fetch menu.");
+      }
+    } catch (error) {
+      console.error("Error fetching menu:", error);
+      alert("Error fetching menu. Please try again.");
     }
   };
 
-  const handleSubmit = () => {
-    if (item && price && restaurant) {
-      fetch("/api/addMenuItem", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name: restaurant, item, price }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            alert(
-              `Added ${item} to restaurant ${data.restaurant.name} at price ${price} successfully!`
-            );
-          } else {
-            alert("Failed to add item.");
-          }
-        });
-    } else {
-      alert("Please fill in all fields.");
-    }
-  };
+  useEffect(() => {
+    getMenu();
+  }, [veg, filterByRating, bestseller]);
 
   return (
     <div>
@@ -149,56 +121,47 @@ function Menu() {
           alt=""
         />
       </div>
-      {/* <div className="ml-[10vw] mt-[2vh] bg-[rgba(255,255,255,0.1)] w-fit p-[2vw] flex flex-col gap-[2vh]">
-        <h1 className="w-fit">Godrick’s Grafted Grill, Seoul</h1>
-        <h1 className="w-fit">Ranni’s Darkmoon Café, Paris</h1>
-        <h1 className="w-fit">Radahn’s Cosmic Steakhouse, Texas</h1>
-        <h1 className="w-fit">Mohg’s Blood Diner, Dubai</h1>
-        <h1 className="w-fit">Rykard’s Forbidden BBQ Pit, Sydney</h1>
-        <h1 className="w-fit">Miquella’s Haligtree Vegan Lounge, Montréal</h1>
-        <h1 className="w-fit">Morgott’s Omen King Tandoor, Chandigarh</h1>
-      </div> */}
-
-      {/* <p>Welcome to the menu page!</p>
-
-      <h1>ADD RESTAURANT</h1>
-      <input
-        type="text"
-        placeholder="enter restaurant name"
-        onChange={handleRestaurantChange}
-      />
-
-      <input
-        type="text"
-        placeholder="enter restaurant location"
-        onChange={handleLocationChange}
-      />
-
-      <input
-        type="text"
-        placeholder="enter restaurant demigod"
-        onChange={handleDemigodChange}
-      />
-
-      <button onClick={handleAddRestaurant}>Add Restaurant</button>
-
-      <h1>ADD MENU</h1>
-      <input
-        type="text"
-        placeholder="enter food item"
-        onChange={handleItemChange}
-      />
-      <input
-        type="text"
-        placeholder="enter price"
-        onChange={handlePriceChange}
-      />
-      <input
-        type="text"
-        placeholder="enter restaurant name"
-        onChange={handleRestaurantChange}
-      />
-      <button onClick={handleSubmit}>Add Item</button> */}
+      <div className="">
+        <div className="flex flex-col gap-[2vh] mt-[4vh] ml-[10vw]">
+          <h1 className="text-[7vw]">Appetizers</h1>
+          {menu.map(
+            (item: any, index) =>
+              item.mealType === "Starters" &&
+              (veg === "both" ||
+                (veg === "veg" && item.veg === true) ||
+                (veg === "non-veg" && item.veg === false)) &&
+              (!filterByRating || item.rating >= 4) &&
+              (!bestseller || item.bestseller === true) && (
+                <MenuItemCard key={index} item={item} />
+              )
+          )}
+          <h1 className="text-[7vw]">Main Course</h1>
+          {menu.map(
+            (item: any, index) =>
+              item.mealType === "Main Course" &&
+              (veg === "both" ||
+                (veg === "veg" && item.veg === true) ||
+                (veg === "non-veg" && item.veg === false)) &&
+              (!filterByRating || item.rating >= 4) &&
+              (!bestseller || item.bestseller === true) && (
+                <MenuItemCard key={index} item={item} />
+              )
+          )}
+          <h1 className="text-[7vw]">Desserts</h1>
+          {menu.map(
+            (item: any, index) =>
+              item.mealType === "Desserts" &&
+              (veg === "both" ||
+                (veg === "veg" && item.veg === true) ||
+                (veg === "non-veg" && item.veg === false)) &&
+              (!filterByRating || item.rating >= 4) &&
+              (!bestseller || item.bestseller === true) && (
+                <MenuItemCard key={index} item={item} />
+              )
+          )}
+        </div>
+        <div className="h-[17vh]"></div>
+      </div>
     </div>
   );
 }

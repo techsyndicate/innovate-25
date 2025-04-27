@@ -12,6 +12,11 @@ const restaurantSchema = new Schema({
       rating: { type: Number, required: true, default: 0 },
       bestseller: { type: Boolean, required: true, default: false },
       veg: { type: Boolean, required: true, default: true },
+      mealType: {
+        type: String,
+        required: true,
+        default: "",
+      },
     },
   ],
   demigod: reqString,
