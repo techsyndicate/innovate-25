@@ -12,16 +12,6 @@ function Menu() {
   const [bestseller, setBestseller] = useState(false);
   const [menu, setMenu] = useState([]);
 
-  const handleVeg = () => {
-    if (veg == "both") {
-      return "both";
-    } else if (veg == "veg") {
-      return "veg";
-    } else if (veg == "non-veg") {
-      return "non-veg";
-    }
-  };
-
   const handleVegChange = () => {
     if (veg == "both") {
       setVeg("veg");
@@ -82,20 +72,20 @@ function Menu() {
         {restaurant}
       </h1>
 
-      <div className="w-[80vw] ml-[10vw] mt-[4vh] relative">
+      <div className="w-[80vw] ml-[10vw] mt-[8.67vw] relative">
         <img src="./menu/search.svg" className="" alt="" />
         <input
           type="text"
-          className="absolute top-[1.25vh] text-[4.5vw] placeholder:text-[rgba(255,255,255,0.6)] outline-none border-none left-[8vw]"
+          className="absolute top-[2.70vw] text-[4.5vw] placeholder:text-[rgba(255,255,255,0.6)] outline-none border-none left-[8vw]"
           placeholder="Search"
         />
         <img
           src="./menu/search-button.svg"
-          className="absolute h-[4vh] top-[0.7vh] right-[3vw]"
+          className="absolute h-[8.67vw] top-[1.5vw] right-[3vw]"
           alt=""
         />
       </div>
-      <div className="ml-[15vw] mt-[1.5vh] flex flex-row items-center gap-[2vw]">
+      <div className="ml-[15vw] mt-[3.25vw] flex flex-row items-center gap-[2vw]">
         <img
           onClick={() => handleVegChange()}
           src={`./menu/${veg}.svg`}
@@ -122,7 +112,7 @@ function Menu() {
         />
       </div>
       <div className="">
-        <div className="flex flex-col gap-[2vh] mt-[4vh] ml-[10vw]">
+        <div className="flex flex-col gap-[4.33vw] mt-[8.66vw] ml-[10vw]">
           <h1 className="text-[7vw]">Appetizers</h1>
           {menu.map(
             (item: any, index) =>
@@ -160,7 +150,7 @@ function Menu() {
               )
           )}
         </div>
-        <div className="h-[17vh]"></div>
+        <div className="h-[36.83vw]"></div>
       </div>
     </div>
   );
