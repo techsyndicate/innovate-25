@@ -11,6 +11,7 @@ function Menu() {
   const [filterByRating, setFilterByRating] = useState(false);
   const [bestseller, setBestseller] = useState(false);
   const [menu, setMenu] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("")
 
   const handleVeg = () => {
     if (veg == "both") {
@@ -88,6 +89,7 @@ function Menu() {
           type="text"
           className="absolute top-[1.25vh] text-[4.5vw] placeholder:text-[rgba(255,255,255,0.6)] outline-none border-none left-[8vw]"
           placeholder="Search"
+          onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
         />
         <img
           src="./menu/search-button.svg"
@@ -132,7 +134,7 @@ function Menu() {
                 (veg === "non-veg" && item.veg === false)) &&
               (!filterByRating || item.rating >= 4) &&
               (!bestseller || item.bestseller === true) && (
-                <MenuItemCard key={index} item={item} />
+                <MenuItemCard visible={item.name.toLowerCase().includes(searchQuery) ? true : false} key={index} item={item} />
               )
           )}
           <h1 className="text-[7vw]">Main Course</h1>
@@ -144,7 +146,7 @@ function Menu() {
                 (veg === "non-veg" && item.veg === false)) &&
               (!filterByRating || item.rating >= 4) &&
               (!bestseller || item.bestseller === true) && (
-                <MenuItemCard key={index} item={item} />
+                <MenuItemCard visible={item.name.toLowerCase().includes(searchQuery) ? true : false} key={index} item={item} />
               )
           )}
           <h1 className="text-[7vw]">Desserts</h1>
@@ -156,7 +158,7 @@ function Menu() {
                 (veg === "non-veg" && item.veg === false)) &&
               (!filterByRating || item.rating >= 4) &&
               (!bestseller || item.bestseller === true) && (
-                <MenuItemCard key={index} item={item} />
+                <MenuItemCard visible={item.name.toLowerCase().includes(searchQuery) ? true : false} key={index} item={item} />
               )
           )}
         </div>

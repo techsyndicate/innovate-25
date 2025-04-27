@@ -3,9 +3,11 @@ import React, { useState, useEffect } from "react";
 
 function MenuItemCard({
   item,
+  visible,
   onQuantityChange,
 }: {
   item: any;
+  visible: any;
   onQuantityChange?: (id: any, quantity: number) => void;
 }) {
   const [quantity, setQuantity] = useState(item.quantity || 0);
@@ -24,7 +26,7 @@ function MenuItemCard({
   };
 
   return (
-    <div className="flex flex-row gap-[2vw]">
+    <div className={`flex flex-row gap-[2vw] ${visible ? 'visible' : 'hidden'}`}>
       <div className="flex flex-row">
         <div className="relative">
           <img src="./menu/item.svg" className="w-[70.5vw]" alt={item.name} />
