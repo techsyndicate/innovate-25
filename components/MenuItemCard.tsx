@@ -33,43 +33,47 @@ function MenuItemCard({
           {item.veg ? (
             <img
               src="./menu/vegLogo.svg"
-              className="w-[5vw] absolute top-[1.75vh] left-[2vw]"
+              className="w-[5vw] absolute top-[3.95vw] left-[2vw]"
               alt=""
             />
           ) : (
             <img
               src="./menu/nonVegLogo.svg"
-              className="w-[5vw] absolute top-[1.75vh] left-[2vw]"
+              className="w-[5vw] absolute top-[3.95vw] left-[2vw]"
               alt=""
             />
           )}
-          <p className="absolute top-[1.25vh] left-[9vw] text-[3.45vw]">
+          <p className="absolute top-[2.7vw] left-[9vw] text-[3.45vw]">
             {item.name}
           </p>
-          <p className="absolute text-[rgba(255,255,255,0.5)] top-[3vh] left-[9vw] text-[2.6vw]">
+          <p className="absolute text-[rgba(255,255,255,0.5)] top-[6.5vw] left-[9vw] text-[2.6vw]">
             {item.description}
           </p>
-          <p className="absolute text-[5vw] top-[1.4vh] right-[6vw]">
+          <p className="absolute text-[5vw] top-[3vw] right-[6vw]">
             ₹{item.price}
           </p>
         </div>
         <div className="relative">
-          <img src={`./menu/cart.svg`} className="h-[5.85vh]" alt={item.name} />
+          <img
+            src={`./menu/cart.svg`}
+            className="w-[12.85vw] aspect-square"
+            alt={item.name}
+          />
           {quantity > 0 ? (
             <div className="">
-              <h1 className="absolute top-[1.5vw] text-[7vw] left-[4.5vw]">
+              <h1 className="absolute top-[1.5vw] text-[7vw] left-[4.8vw]">
                 {quantity}
               </h1>
               <img
                 onClick={() => updateQuantity(quantity + 1)}
                 src="./menu/arrow-up.svg"
-                className="absolute top-[0.5vh] left-[4.3vw] w-[4vw]"
+                className="absolute top-[1.08vw] left-[4.55vw] w-[4vw]"
                 alt=""
               />
               <img
                 onClick={() => updateQuantity(quantity - 1)}
                 src="./menu/arrow-down.svg"
-                className="absolute bottom-[0.5vh] left-[4.3vw] w-[4vw]"
+                className="absolute bottom-[1.08vw] left-[4.55vw] w-[4vw]"
                 alt=""
               />
             </div>
