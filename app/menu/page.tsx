@@ -11,7 +11,7 @@ function Menu() {
   const [filterByRating, setFilterByRating] = useState(false);
   const [bestseller, setBestseller] = useState(false);
   const [menu, setMenu] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("")
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleVegChange = () => {
     if (veg == "both") {
@@ -48,7 +48,7 @@ function Menu() {
       }
     } catch (error) {
       console.error("Error fetching menu:", error);
-      alert("Error fetching menu. Please try again.");
+      alert("Error fetching menu. Please try again later.");
     }
   };
 
@@ -124,7 +124,13 @@ function Menu() {
                 (veg === "non-veg" && item.veg === false)) &&
               (!filterByRating || item.rating >= 4) &&
               (!bestseller || item.bestseller === true) && (
-                <MenuItemCard visible={item.name.toLowerCase().includes(searchQuery) ? true : false} key={index} item={item} />
+                <MenuItemCard
+                  visible={
+                    item.name.toLowerCase().includes(searchQuery) ? true : false
+                  }
+                  key={index}
+                  item={item}
+                />
               )
           )}
           <h1 className="text-[7vw]">Main Course</h1>
@@ -136,7 +142,13 @@ function Menu() {
                 (veg === "non-veg" && item.veg === false)) &&
               (!filterByRating || item.rating >= 4) &&
               (!bestseller || item.bestseller === true) && (
-                <MenuItemCard visible={item.name.toLowerCase().includes(searchQuery) ? true : false} key={index} item={item} />
+                <MenuItemCard
+                  visible={
+                    item.name.toLowerCase().includes(searchQuery) ? true : false
+                  }
+                  key={index}
+                  item={item}
+                />
               )
           )}
           <h1 className="text-[7vw]">Desserts</h1>
@@ -148,7 +160,13 @@ function Menu() {
                 (veg === "non-veg" && item.veg === false)) &&
               (!filterByRating || item.rating >= 4) &&
               (!bestseller || item.bestseller === true) && (
-                <MenuItemCard visible={item.name.toLowerCase().includes(searchQuery) ? true : false} key={index} item={item} />
+                <MenuItemCard
+                  visible={
+                    item.name.toLowerCase().includes(searchQuery) ? true : false
+                  }
+                  key={index}
+                  item={item}
+                />
               )
           )}
         </div>
