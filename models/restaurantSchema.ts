@@ -4,10 +4,16 @@ const reqString = { type: String, required: true, default: "" };
 const restaurantSchema = new Schema({
   name: reqString,
   location: reqString,
-  menu: {
-    type: Array,
-    default: [],
-  },
+  menu: [
+    {
+      name: reqString,
+      price: { type: Number, required: true, default: 0 },
+      description: reqString,
+      rating: { type: Number, required: true, default: 0 },
+      bestseller: { type: Boolean, required: true, default: false },
+      veg: { type: Boolean, required: true, default: true },
+    },
+  ],
   demigod: reqString,
   tables: [
     {

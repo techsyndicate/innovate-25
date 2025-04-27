@@ -1,9 +1,13 @@
-import Image from "next/image";
+"use client";
+import Navbar from "@/components/Navbar";
+import Header from "@/components/Header";
+import React from "react";
 
 export default function Home() {
   return (
     <div>
-      <p>Hello World!</p>
+      <Navbar />
+      <Header />
     </div>
   );
 }

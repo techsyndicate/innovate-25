@@ -6,7 +6,8 @@ export async function POST(request: NextRequest) {
   try {
     await connectDb();
 
-    const { name, item, price } = await request.json();
+    const { name, item, price, rating, bestseller, description, veg } =
+      await request.json();
 
     const existingRestaurant = await Restaurant.findOne({ name });
     if (!existingRestaurant) {
@@ -17,7 +18,19 @@ export async function POST(request: NextRequest) {
     }
     const modifiedRestaurant = await Restaurant.findOneAndUpdate(
       { name },
-      { $push: { menu: { name: item, price } } }
+      {
+        $push: {
+          menu: {
+            name: item,
+            price: price,
+            rating: rating,
+            bestseller: bestseller,
+            veg: veg,
+            description: description,
+          },
+        },
+      },
+      { new: true }
     );
     return NextResponse.json(
       {
