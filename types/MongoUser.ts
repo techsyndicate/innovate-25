@@ -3,4 +3,5 @@ export interface MongoUser {
   clerkId: string;
   name: string;
   _id: string;
+  seenQuests: boolean;
 }
