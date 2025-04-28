@@ -67,7 +67,7 @@ function MenuItemCard({
           />
           {quantity > 0 ? (
             <div className="">
-              <h1 className="absolute top-[1.5vw] text-[7vw] left-[4.8vw]">
+              <h1 className="absolute top-[1.3vw] text-[7vw] left-[4.8vw]">
                 {quantity}
               </h1>
               <img
