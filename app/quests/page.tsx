@@ -2,12 +2,12 @@
 import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import React, { useState, useEffect } from "react";
-import { PacmanLoader } from "react-spinners";
 import { MongoUser } from "@/types/MongoUser";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import QuestProgressIcon from "@/components/QuestProgressIcon";
 import Quest from "@/models/questSchema";
+import Loading from "@/components/Loading";
 
 function Quests() {
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -54,8 +54,8 @@ function Quests() {
           setQuests(data.quests);
           setQuestsLoading(false);
         } else {
-          alert('Something went wrong. Please try again.')
-          window.location.reload()
+          alert("Something went wrong. Please try again.");
+          window.location.reload();
         }
       });
   }, [isLoaded, user]);
@@ -63,7 +63,7 @@ function Quests() {
   if (!isLoaded || mongoUserLoading || questsLoading) {
     return (
       <div className="flex flex-col w-[100%] h-[100vh] items-center justify-center">
-        <PacmanLoader className="justify-center items-center" color="#651DFF" />
+        <Loading />
       </div>
     );
   }
@@ -168,9 +168,18 @@ function Quests() {
             5
           </QuestProgressIcon>
         </div>
-        {quests.map((quest: {title: string, description: string, questNumber: number}) => (
-          <img src={`/quests/quest${quest.questNumber}.png`} className="w-[85vw]"></img>
-        ))}
+        {quests.map(
+          (quest: {
+            title: string;
+            description: string;
+            questNumber: number;
+          }) => (
+            <img
+              src={`/quests/quest${quest.questNumber}.png`}
+              className="w-[85vw]"
+            ></img>
+          )
+        )}
       </div>
     </div>
   );

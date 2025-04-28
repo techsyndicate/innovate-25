@@ -3,7 +3,7 @@ import React from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { PacmanLoader } from "react-spinners";
+import Loading from "@/components/Loading";
 import "notyf/notyf.min.css";
 import { MongoUser } from "@/types/MongoUser";
 
@@ -40,7 +40,7 @@ function Balance() {
   if (!isLoaded || mongoUserLoading) {
     return (
       <div className="flex flex-col w-[100%] h-[100vh] items-center justify-center">
-        <PacmanLoader className="justify-center items-center" color="#651DFF" />
+        <Loading />
       </div>
     );
   }
