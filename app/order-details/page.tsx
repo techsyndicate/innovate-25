@@ -4,16 +4,53 @@ import MenuItemCard from "@/components/MenuItemCard";
 import Navbar from "@/components/Navbar";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
+import "notyf/notyf.min.css";
+import { Notyf } from "notyf";
+import { MongoUser } from "@/types/MongoUser";
+import Loading from "@/components/Loading";
 
 function OrderDetails() {
   const [orderData, setOrderData] = useState<any>(null);
+  const [restaurant, setRestaurant] = useState("");
   const router = useRouter();
+  const { isLoaded, user } = useUser();
+  const [mongoUser, setMongoUser] = useState({} as MongoUser);
+  const [mongoUserLoading, setMongoUserLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    fetch("/api/getUser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: user?.primaryEmailAddress?.emailAddress }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.user) {
+          setMongoUserLoading(false);
+          setMongoUser(data.user);
+        } else {
+          console.error("An error occured while fetching user.");
+          setMongoUserLoading(false);
+          return router.push("/sign-in");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+        setMongoUserLoading(false);
+      });
+  }, [isLoaded, user, router]);
 
   useEffect(() => {
     const storedData = localStorage.getItem("orderData");
     if (storedData) {
       try {
         const parsedData = JSON.parse(storedData);
+        setRestaurant(parsedData?.restaurant || "");
         setOrderData(parsedData);
       } catch (error) {
         console.error("Error parsing order data:", error);
@@ -39,13 +76,41 @@ function OrderDetails() {
     localStorage.setItem("orderData", JSON.stringify(updatedOrderData));
   };
 
-  if (!orderData) return <div>Loading order details...</div>;
+  const handleOrderConfirmation = () => {
+    if (!mongoUser?._id) {
+      alert("Please sign in to place an order");
+      return router.push("/sign-in");
+    }
 
-  const totalAmount =
-    orderData.items?.reduce(
-      (sum: number, item: any) => sum + item.price * item.quantity,
-      0
-    ) || 0;
+    fetch("/api/placeOrder", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ uid: mongoUser._id, menu: orderData }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          localStorage.removeItem("orderData");
+          router.push("/order-details/confirmation");
+        } else {
+          alert("An error occurred while placing the order.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error placing order:", error);
+        alert("Network error. Please try again.");
+      });
+  };
+
+  if (!isLoaded || mongoUserLoading) {
+    return (
+      <div className="flex flex-col w-[100%] h-[100vh] items-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
 
   if (!orderData || !orderData.items || orderData.items.length === 0) {
     return (
@@ -60,6 +125,11 @@ function OrderDetails() {
       </div>
     );
   }
+
+  const totalAmount = orderData.items.reduce(
+    (sum: number, item: any) => sum + item.price * item.quantity,
+    0
+  );
 
   return (
     <div>
@@ -85,15 +155,14 @@ function OrderDetails() {
         alt=""
       />
       <div className="flex flex-col gap-[4.33vw] ml-[10vw]">
-        {orderData.items &&
-          orderData.items.map((item: any, key: any) => (
-            <MenuItemCard
-              item={item}
-              key={key}
-              visible={true}
-              onQuantityChange={handleQuantityChange}
-            />
-          ))}
+        {orderData.items.map((item: any, index: number) => (
+          <MenuItemCard
+            item={item}
+            key={`${item._id || item.name}-${index}`}
+            visible={true}
+            onQuantityChange={handleQuantityChange}
+          />
+        ))}
       </div>
 
       <div className="ml-[10vw] mr-[10vw] mt-[8vw]">
@@ -126,14 +195,8 @@ function OrderDetails() {
         <img
           src="./menu/place-order.svg"
           className="w-[80vw]"
-          onClick={() => {
-            if (orderData.items.length === 0) {
-              alert("Your order is empty. Please add items.");
-              return;
-            }
-            router.push("/payment");
-          }}
-          alt=""
+          onClick={handleOrderConfirmation}
+          alt="Place order button"
         />
       </div>
       <div className="h-[20vw]"></div>
