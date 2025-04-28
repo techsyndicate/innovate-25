@@ -2,14 +2,16 @@
 import Navbar from "@/components/Navbar";
 import Header from "@/components/Header";
 import React, { useState, TouchEvent } from "react";
+import {useRouter} from 'next/navigation'
 
 export default function Home() {
+  const router = useRouter()
   const [activeImage, setActiveImage] = useState(1);
   const [leftPercent, setLeftPercent] = useState(0);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const minSwipeDistance = 50;
-  const aiAgents = ['Morgott', "Ranni", "Godrick", "Mohg"]
+  const aiAgents = ["Morgott", "Ranni", "Godrick", "Mohg"];
 
   const onTouchStart = (e: any) => {
     setTouchEnd(null);
@@ -84,8 +86,8 @@ export default function Home() {
         className="w-[25vw] h-[7.5vw] absolute left-[37.5vw] top-[85vw]"
       ></img>
       <div className="top-[85vw] text-[2.75vw] absolute w-[100vw] flex justify-center">
-        <div className="w-[25vw] h-[7.5vw] flex justify-center items-center">
-          {`Talk with ${aiAgents[activeImage-1]}`}
+        <div className="w-[25vw] h-[7.5vw] flex justify-center items-center" onClick={() => {router.push(`/ai/${aiAgents[activeImage - 1].toLowerCase()}`)}}>
+          {`Talk with ${aiAgents[activeImage - 1]}`}
         </div>
       </div>
       <div className="top-[93.5vw] absolute left-[40vw] w-[20vw] flex items-center justify-center">
@@ -111,14 +113,16 @@ export default function Home() {
         ></div>
       </div>
       <div className="w-[80vw] flex ml-[10vw] my-[2vh] justify-between">
-          <div>
-            <h1 className="text-lg">UPCOMING RESERVATION</h1>
-            <div className="flex items-center gap-[1vw] text-[#999]">
-              <img src="/home/location.png" className="w-[3vw]"></img>
-              <p className="text-[3vw]">Morgott's Omen King Tandoor, Chandigarh</p>
-            </div>
+        <div className="mt-[2vw]">
+          <h1 className="text-[4.25vw]">UPCOMING RESERVATION</h1>
+          <div className="flex items-center gap-[1vw] text-[#999]">
+            <img src="/home/location.png" className="w-[3vw]"></img>
+            <p className="text-[3vw]">
+              Morgott's Omen King Tandoor, Chandigarh
+            </p>
           </div>
-          <h1 className="text-4xl text-[#ffb84d]">12:45</h1>
+        </div>
+        <h1 className="text-[9vw] text-[#ffb84d]">12:45</h1>
       </div>
       <img src="/home/navigate_banner.png" className="mb-[20vh]"></img>
     </div>

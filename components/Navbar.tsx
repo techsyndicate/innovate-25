@@ -8,13 +8,13 @@ function Navbar() {
     return (
       <div className="fixed z-[15] w-[100vw] bottom-0">
         <img
-          src="./navbar/cross.svg"
+          src="/navbar/cross.svg"
           className="absolute bottom-[78vw] left-[3vw] z-[14] w-[10vw] pointer-cursor"
           alt=""
           onClick={() => setShowCard(!showCard)}
         />
         <img
-          src="./navbar/card.svg"
+          src="/navbar/card.svg"
           className="absolute bottom-0 z-[10] w-[100vw]"
           style={{ pointerEvents: "none" }}
           alt=""
@@ -49,14 +49,14 @@ function Navbar() {
       {showCard && (
         <div className="relative mb-[-10vh] w-[100vw] bottom-0">
           <img
-            src="./navbar/cross.svg"
+            src="/navbar/cross.svg"
             className="absolute bottom-[35.4vh] left-[-7vw] z-[14] w-[10vw]"
             style={{ pointerEvents: "none" }}
             alt=""
             onClick={() => console.log("clicked")}
           />
           <img
-            src="./navbar/card.svg"
+            src="/navbar/card.svg"
             className="absolute bottom-[-8vh] left-[-10vw] z-[10] w-[100vw]"
             style={{ pointerEvents: "none" }}
             alt=""
@@ -85,34 +85,34 @@ function Navbar() {
         </div>
       )}
       <div className="relative ">
-        <img src="./navbar/nav.svg" className="w-[80vw] " alt="" />
+        <img src="/navbar/nav.svg" className="w-[80vw] " alt="" />
         <div className="flex flex-row justify-between absolute top-[-1.563vh] w-[60vw] left-[10vw]">
           <img
-            src="./navbar/home.svg"
+            src="/navbar/home.svg"
             className="w-[4.5vw]"
             onClick={() => (window.location.href = "/")}
             alt=""
           />
           <img
-            src="./navbar/order.svg"
+            src="/navbar/order.svg"
             className="w-[4.8vw]"
             onClick={() => (window.location.href = "/menu")}
             alt=""
           />
           <img
-            src="./navbar/key.svg"
+            src="/navbar/key.svg"
             className="w-[20vw]"
             onClick={() => setShowCard(!showCard)}
             alt=""
           />
           <img
-            src="./navbar/merch.svg"
+            src="/navbar/merch.svg"
             className="w-[4.7vw]"
-            onClick={() => (window.location.href = "/merch")}
+            onClick={() => (window.location.href = "/quests")}
             alt=""
           />
           <img
-            src="./navbar/profile.svg"
+            src="/navbar/profile.svg"
             className="w-[6.3vw]"
             onClick={() => (window.location.href = "/")}
             alt=""
@@ -120,7 +120,7 @@ function Navbar() {
         </div>
       </div>
       <img
-        src="./navbar/gradient.svg"
+        src="/navbar/gradient.svg"
         className="fixed bottom-0 left-[0vw] z-[-5]"
         style={{ pointerEvents: "none" }}
         alt=""

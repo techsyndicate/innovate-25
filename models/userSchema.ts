@@ -12,6 +12,7 @@ const userSchema = new Schema({
     ref: "Card",
   },
   seenQuests: { type: Boolean, default: false },
+  completedQuests: {type: Array, default: []}
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

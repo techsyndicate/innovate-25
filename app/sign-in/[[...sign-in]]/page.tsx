@@ -18,7 +18,7 @@ export default function SignInForm() {
   const { user } = useUser();
 
   if (isLoaded && user) {
-    return router.push("/dashboard");
+    return router.push("/");
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,7 +36,7 @@ export default function SignInForm() {
       if (signInAttempt.status === "complete") {
         // @ts-ignore
         await setActive({ session: signInAttempt.createdSessionId });
-        router.push("/dashboard");
+        router.push("/");
       } else {
         console.error(JSON.stringify(signInAttempt, null, 2));
       }

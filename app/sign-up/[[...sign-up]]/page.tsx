@@ -21,7 +21,7 @@ export default function Page() {
   const { user } = useUser();
 
   if (user) {
-    return router.push("/dashboard");
+    return router.push("/");
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,7 +80,7 @@ export default function Page() {
           })
           .then((data) => {
             console.log("Success:", data);
-            router.push("/dashboard");
+            router.push("/");
           })
           .catch((error) => {
             console.error("Error:", error);

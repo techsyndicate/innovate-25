@@ -4,4 +4,5 @@ export interface MongoUser {
   name: string;
   _id: string;
   seenQuests: boolean;
+  completedQuests: Array<number>
 }
