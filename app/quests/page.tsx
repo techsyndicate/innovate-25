@@ -2,12 +2,12 @@
 import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import React, { useState, useEffect } from "react";
+import { PacmanLoader } from "react-spinners";
 import { MongoUser } from "@/types/MongoUser";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import QuestProgressIcon from "@/components/QuestProgressIcon";
 import Quest from "@/models/questSchema";
-import Loading from "@/components/Loading";
 
 function Quests() {
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -63,7 +63,7 @@ function Quests() {
   if (!isLoaded || mongoUserLoading || questsLoading) {
     return (
       <div className="flex flex-col w-[100%] h-[100vh] items-center justify-center">
-        <Loading />
+        <PacmanLoader className="justify-center items-center" color="#651DFF" />
       </div>
     );
   }
@@ -170,18 +170,73 @@ function Quests() {
             5
           </QuestProgressIcon>
         </div>
-        {quests.map(
-          (quest: {
-            title: string;
-            description: string;
-            questNumber: number;
-          }) => (
+        <div
+          className="fixed left-0 bottom-0 w-[100vw] h-[40vh]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.7), black)",
+            pointerEvents: "none",
+          }}
+        ></div>
+        <div className="relative w-[85vw] h-[30vw] mt-[10vw] z-[-2]">
+          <img
+            src="/quest/grey_box.svg"
+            className="absolute top-0 left-0 w-[85vw]"
+          ></img>
+          <img
+            src={`/quest/quest${currentLevel + 1}.svg`}
+            className="w-[41.75vw] absolute top-[0.25vw] left-0"
+          ></img>
+          <div className="absolute w-[55vw] top-[4vw] right-[4vw] flex flex-col items-end">
+            <h1 className="text-[3vw] text-[#939393]">IN PROGRESS</h1>
+            <h1
+              className="mb-[1vw]"
+              style={{ fontFamily: "var(--font-mantinia)" }}
+            >
+              {quests[currentLevel].title}
+            </h1>
+            <p className="text-right text-[2vw]">
+              {quests[currentLevel].description}
+            </p>
+          </div>
+          <div
+            className="bg-[#ffb84d] absolute left-[7.5vw] bottom-[-3vw] w-[12vw] h-[5vw] text-[2vw] flex items-center justify-center text-[#000]"
+            style={{clipPath: 'polygon(10% 0, 90% 0, 100% 20%, 100% 80%, 90% 100%, 10% 100%, 0 80%, 0 20%)'}}
+          >
+            QUEST {currentLevel + 1}
+          </div>
+        </div>
+        {mongoUser.completedQuests.map((quest) => (
+          <div className="relative w-[85vw] h-[30vw] mt-[10vw] z-[-2]">
             <img
-              src={`/quests/quest${quest.questNumber}.png`}
-              className="w-[85vw]"
+              src="/quest/orange_box.svg"
+              className="absolute top-0 left-0 w-[85vw]"
             ></img>
-          )
-        )}
+            <img
+              key={quest}
+              src={`/quest/quest${quest}.svg`}
+              className="w-[41.75vw] absolute top-[0.25vw] left-0"
+            ></img>
+            <div className="absolute w-[55vw] top-[4vw] right-[4vw] flex flex-col items-end">
+              <h1 className="text-[3vw] text-[#ffb84d]">COMPLETED</h1>
+              <h1
+                className="mb-[1vw]"
+                style={{ fontFamily: "var(--font-mantinia)" }}
+              >
+                {quests[quest - 1].title}
+              </h1>
+              <p className="text-right text-[2vw]">
+                {quests[quest - 1].description}
+              </p>
+            </div>
+            <div
+              className="bg-[#ffb84d] absolute left-[7.5vw] bottom-[-3vw] w-[12vw] h-[5vw] text-[2vw] flex items-center justify-center text-[#000]"
+              style={{clipPath: 'polygon(10% 0, 90% 0, 100% 20%, 100% 80%, 90% 100%, 10% 100%, 0 80%, 0 20%)'}}
+            >
+              QUEST {quest}
+            </div>
+          </div>
+        ))}
       </div>
       <div className="h-[20vh]"></div>
     </div>
