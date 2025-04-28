@@ -16,7 +16,7 @@ function Quests() {
   const [mongoUser, setMongoUser] = useState({} as MongoUser);
   const [mongoUserLoading, setMongoUserLoading] = useState(true);
   const [questsLoading, setQuestsLoading] = useState(true);
-  const [quests, setQuests] = useState([]);
+  const [quests, setQuests] = useState<any[]>([]);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -112,7 +112,7 @@ function Quests() {
         <Navbar />
         <div className="absolute top-[33vw] left-[10vw]">
           <div className="relative">
-            <img src="./quests/dialogue-box.svg" className="w-[80vw] " alt="" />
+            <img src="./quest/dialogue-box.svg" className="w-[80vw] " alt="" />
             <div className="absolute top-[4vw] left-[4vw]">
               <p className="text-[3.25vw] w-[72vw]">Greetings Hunter,</p>
               <p className="text-[3.25vw] w-[72vw]">
@@ -130,10 +130,12 @@ function Quests() {
             </p>
           </div>
         </div>
-        <img src="./quests/starting-svg.svg" className="w-[100vw] " alt="" />
+        <img src="./quest/starting-svg.svg" className="w-[100vw] " alt="" />
       </div>
     );
   }
+
+  console.log(quests);
 
   return (
     <div>
@@ -181,6 +183,7 @@ function Quests() {
           )
         )}
       </div>
+      <div className="h-[20vh]"></div>
     </div>
   );
 }
