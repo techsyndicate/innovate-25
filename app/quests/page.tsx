@@ -2,12 +2,12 @@
 import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import React, { useState, useEffect } from "react";
-import { PacmanLoader } from "react-spinners";
 import { MongoUser } from "@/types/MongoUser";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import QuestProgressIcon from "@/components/QuestProgressIcon";
 import Quest from "@/models/questSchema";
+import Loading from "@/components/Loading";
 
 function Quests() {
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -33,7 +33,7 @@ function Quests() {
         if (data.user) {
           setMongoUserLoading(false);
           setMongoUser(data.user);
-          setCurrentLevel(Math.max(...data.user.completedQuests));
+          setCurrentLevel(Math.max(0, ...data.user.completedQuests));
         } else {
           console.error("An error occured while fetching user.");
           setMongoUserLoading(false);
@@ -63,7 +63,7 @@ function Quests() {
   if (!isLoaded || mongoUserLoading || questsLoading) {
     return (
       <div className="flex flex-col w-[100%] h-[100vh] items-center justify-center">
-        <PacmanLoader className="justify-center items-center" color="#651DFF" />
+        <Loading />
       </div>
     );
   }
@@ -201,7 +201,10 @@ function Quests() {
           </div>
           <div
             className="bg-[#ffb84d] absolute left-[7.5vw] bottom-[-3vw] w-[12vw] h-[5vw] text-[2vw] flex items-center justify-center text-[#000]"
-            style={{clipPath: 'polygon(10% 0, 90% 0, 100% 20%, 100% 80%, 90% 100%, 10% 100%, 0 80%, 0 20%)'}}
+            style={{
+              clipPath:
+                "polygon(10% 0, 90% 0, 100% 20%, 100% 80%, 90% 100%, 10% 100%, 0 80%, 0 20%)",
+            }}
           >
             QUEST {currentLevel + 1}
           </div>
@@ -231,7 +234,10 @@ function Quests() {
             </div>
             <div
               className="bg-[#ffb84d] absolute left-[7.5vw] bottom-[-3vw] w-[12vw] h-[5vw] text-[2vw] flex items-center justify-center text-[#000]"
-              style={{clipPath: 'polygon(10% 0, 90% 0, 100% 20%, 100% 80%, 90% 100%, 10% 100%, 0 80%, 0 20%)'}}
+              style={{
+                clipPath:
+                  "polygon(10% 0, 90% 0, 100% 20%, 100% 80%, 90% 100%, 10% 100%, 0 80%, 0 20%)",
+              }}
             >
               QUEST {quest}
             </div>
