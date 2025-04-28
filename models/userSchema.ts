@@ -11,6 +11,7 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Card",
   },
+  seenQuests: { type: Boolean, default: false },
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
