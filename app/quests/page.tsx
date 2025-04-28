@@ -11,8 +11,8 @@ function Quests() {
         <div className="relative">
           <img src="./quests/dialogue-box.svg" className="w-[80vw] " alt="" />
           <div className="absolute top-[4vw] left-[4vw]">
-            <p className="text-[3vw] w-[67vw]">Greetings Hunter,</p>
-            <p className="text-[3vw] w-[67vw]">
+            <p className="text-[3.25vw] w-[72vw]">Greetings Hunter,</p>
+            <p className="text-[3.25vw] w-[72vw]">
               I am the Gladiator and I need your help; I have lost many ancient
               relics which have been passed down through various generations of
               my family. Find me these relics and I will grant you loads of XP.
