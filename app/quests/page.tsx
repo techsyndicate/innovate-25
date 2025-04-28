@@ -16,7 +16,7 @@ function Quests() {
   const [mongoUser, setMongoUser] = useState({} as MongoUser);
   const [mongoUserLoading, setMongoUserLoading] = useState(true);
   const [questsLoading, setQuestsLoading] = useState(true);
-  const [quests, setQuests] = useState([]);
+  const [quests, setQuests] = useState<any[]>([]);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -54,8 +54,8 @@ function Quests() {
           setQuests(data.quests);
           setQuestsLoading(false);
         } else {
-          alert('Something went wrong. Please try again.')
-          window.location.reload()
+          alert("Something went wrong. Please try again.");
+          window.location.reload();
         }
       });
   }, [isLoaded, user]);
@@ -135,6 +135,8 @@ function Quests() {
     );
   }
 
+  console.log(quests);
+
   return (
     <div>
       <Header />
@@ -168,10 +170,75 @@ function Quests() {
             5
           </QuestProgressIcon>
         </div>
-        {quests.map((quest: {title: string, description: string, questNumber: number}) => (
-          <img src={`/quests/quest${quest.questNumber}.png`} className="w-[85vw]"></img>
+        <div
+          className="fixed left-0 bottom-0 w-[100vw] h-[40vh]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.7), black)",
+            pointerEvents: "none",
+          }}
+        ></div>
+        <div className="relative w-[85vw] h-[30vw] mt-[10vw] z-[-2]">
+          <img
+            src="/quests/grey_box.svg"
+            className="absolute top-0 left-0 w-[85vw]"
+          ></img>
+          <img
+            src={`/quests/quest${currentLevel + 1}.svg`}
+            className="w-[41.75vw] absolute top-[0.25vw] left-0"
+          ></img>
+          <div className="absolute w-[55vw] top-[4vw] right-[4vw] flex flex-col items-end">
+            <h1 className="text-[3vw] text-[#939393]">IN PROGRESS</h1>
+            <h1
+              className="mb-[1vw]"
+              style={{ fontFamily: "var(--font-mantinia)" }}
+            >
+              {quests[currentLevel].title}
+            </h1>
+            <p className="text-right text-[2vw]">
+              {quests[currentLevel].description}
+            </p>
+          </div>
+          <div
+            className="bg-[#ffb84d] absolute left-[7.5vw] bottom-[-3vw] w-[12vw] h-[5vw] text-[2vw] flex items-center justify-center text-[#000]"
+            style={{clipPath: 'polygon(10% 0, 90% 0, 100% 20%, 100% 80%, 90% 100%, 10% 100%, 0 80%, 0 20%)'}}
+          >
+            QUEST {currentLevel + 1}
+          </div>
+        </div>
+        {mongoUser.completedQuests.map((quest) => (
+          <div className="relative w-[85vw] h-[30vw] mt-[10vw] z-[-2]">
+            <img
+              src="/quests/orange_box.svg"
+              className="absolute top-0 left-0 w-[85vw]"
+            ></img>
+            <img
+              key={quest}
+              src={`/quests/quest${quest}.svg`}
+              className="w-[41.75vw] absolute top-[0.25vw] left-0"
+            ></img>
+            <div className="absolute w-[55vw] top-[4vw] right-[4vw] flex flex-col items-end">
+              <h1 className="text-[3vw] text-[#ffb84d]">COMPLETED</h1>
+              <h1
+                className="mb-[1vw]"
+                style={{ fontFamily: "var(--font-mantinia)" }}
+              >
+                {quests[quest - 1].title}
+              </h1>
+              <p className="text-right text-[2vw]">
+                {quests[quest - 1].description}
+              </p>
+            </div>
+            <div
+              className="bg-[#ffb84d] absolute left-[7.5vw] bottom-[-3vw] w-[12vw] h-[5vw] text-[2vw] flex items-center justify-center text-[#000]"
+              style={{clipPath: 'polygon(10% 0, 90% 0, 100% 20%, 100% 80%, 90% 100%, 10% 100%, 0 80%, 0 20%)'}}
+            >
+              QUEST {quest}
+            </div>
+          </div>
         ))}
       </div>
+      <div className="h-[20vh]"></div>
     </div>
   );
 }
