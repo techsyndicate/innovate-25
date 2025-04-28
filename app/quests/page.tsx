@@ -112,7 +112,7 @@ function Quests() {
         <Navbar />
         <div className="absolute top-[33vw] left-[10vw]">
           <div className="relative">
-            <img src="./quests/dialogue-box.svg" className="w-[80vw] " alt="" />
+            <img src="./quest/dialogue-box.svg" className="w-[80vw] " alt="" />
             <div className="absolute top-[4vw] left-[4vw]">
               <p className="text-[3.25vw] w-[72vw]">Greetings Hunter,</p>
               <p className="text-[3.25vw] w-[72vw]">
@@ -130,7 +130,7 @@ function Quests() {
             </p>
           </div>
         </div>
-        <img src="./quests/starting-svg.svg" className="w-[100vw] " alt="" />
+        <img src="./quest/starting-svg.svg" className="w-[100vw] " alt="" />
       </div>
     );
   }
@@ -180,11 +180,11 @@ function Quests() {
         ></div>
         <div className="relative w-[85vw] h-[30vw] mt-[10vw] z-[-2]">
           <img
-            src="/quests/grey_box.svg"
+            src="/quest/grey_box.svg"
             className="absolute top-0 left-0 w-[85vw]"
           ></img>
           <img
-            src={`/quests/quest${currentLevel + 1}.svg`}
+            src={`/quest/quest${currentLevel + 1}.svg`}
             className="w-[41.75vw] absolute top-[0.25vw] left-0"
           ></img>
           <div className="absolute w-[55vw] top-[4vw] right-[4vw] flex flex-col items-end">
@@ -209,12 +209,12 @@ function Quests() {
         {mongoUser.completedQuests.map((quest) => (
           <div className="relative w-[85vw] h-[30vw] mt-[10vw] z-[-2]">
             <img
-              src="/quests/orange_box.svg"
+              src="/quest/orange_box.svg"
               className="absolute top-0 left-0 w-[85vw]"
             ></img>
             <img
               key={quest}
-              src={`/quests/quest${quest}.svg`}
+              src={`/quest/quest${quest}.svg`}
               className="w-[41.75vw] absolute top-[0.25vw] left-0"
             ></img>
             <div className="absolute w-[55vw] top-[4vw] right-[4vw] flex flex-col items-end">
