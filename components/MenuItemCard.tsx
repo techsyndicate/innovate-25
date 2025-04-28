@@ -18,6 +18,10 @@ function MenuItemCard({
 
   const updateQuantity = (newQuantity: number) => {
     const updatedQuantity = Math.max(0, newQuantity);
+    if (newQuantity > 9) {
+      setQuantity(9);
+      return;
+    }
     setQuantity(updatedQuantity);
 
     if (onQuantityChange) {
@@ -26,7 +30,9 @@ function MenuItemCard({
   };
 
   return (
-    <div className={`flex flex-row gap-[2vw] ${visible ? 'visible' : 'hidden'}`}>
+    <div
+      className={`flex flex-row gap-[2vw] ${visible ? "visible" : "hidden"}`}
+    >
       <div className="flex flex-row">
         <div className="relative">
           <img src="./menu/item.svg" className="w-[70.5vw]" alt={item.name} />
@@ -67,13 +73,13 @@ function MenuItemCard({
               <img
                 onClick={() => updateQuantity(quantity + 1)}
                 src="./menu/arrow-up.svg"
-                className="absolute top-[1.08vw] left-[4.55vw] w-[4vw]"
+                className="absolute top-[1.28vw] left-[4.55vw] w-[4vw]"
                 alt=""
               />
               <img
                 onClick={() => updateQuantity(quantity - 1)}
                 src="./menu/arrow-down.svg"
-                className="absolute bottom-[1.08vw] left-[4.55vw] w-[4vw]"
+                className="absolute bottom-[1.28vw] left-[4.55vw] w-[4vw]"
                 alt=""
               />
             </div>

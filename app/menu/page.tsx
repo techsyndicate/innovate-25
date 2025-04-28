@@ -4,14 +4,63 @@ import Header from "@/components/Header";
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import MenuItemCard from "@/components/MenuItemCard";
+import { useRouter } from "next/navigation";
+import MenuItem from "@/types/MenuItem";
 
 function Menu() {
+  const router = useRouter();
   const [restaurant, setRestaurant] = useState("Morgott’s Omen King Tandoor");
   const [veg, setVeg] = useState("both");
   const [filterByRating, setFilterByRating] = useState(false);
   const [bestseller, setBestseller] = useState(false);
-  const [menu, setMenu] = useState([]);
+  const [menu, setMenu] = useState<MenuItem[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [orderData, setOrderData] = useState([]);
+  const [showConfirmOrder, setShowConfirmOrder] = useState(false);
+
+  useEffect(() => {
+    const hasItemsInOrder = menu.some((item) => item.quantity > 0);
+    setShowConfirmOrder(hasItemsInOrder);
+  }, [menu]);
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("orderData");
+    if (storedData) {
+      try {
+        const parsedData = JSON.parse(storedData);
+        setOrderData(parsedData);
+      } catch (error) {
+        console.error("Error parsing order data:", error);
+      }
+    }
+  }, []);
+
+  const confirmOrder = () => {
+    const itemsToOrder = menu.filter((item: any) => item.quantity > 0);
+
+    if (itemsToOrder.length === 0) {
+      alert("Kindly select an item before proceeding.");
+      return;
+    }
+
+    localStorage.setItem(
+      "orderData",
+      JSON.stringify({
+        items: itemsToOrder,
+        restaurant: restaurant,
+      })
+    );
+
+    router.push("/order-details");
+  };
+
+  const handleQuantityChange = (id: string | undefined, quantity: number) => {
+    setMenu((prevMenu) =>
+      prevMenu.map((item) =>
+        item._id === id || item.name === id ? { ...item, quantity } : item
+      )
+    );
+  };
 
   const handleVegChange = () => {
     if (veg == "both") {
@@ -130,6 +179,7 @@ function Menu() {
                   }
                   key={index}
                   item={item}
+                  onQuantityChange={handleQuantityChange}
                 />
               )
           )}
@@ -148,6 +198,7 @@ function Menu() {
                   }
                   key={index}
                   item={item}
+                  onQuantityChange={handleQuantityChange}
                 />
               )
           )}
@@ -166,10 +217,19 @@ function Menu() {
                   }
                   key={index}
                   item={item}
+                  onQuantityChange={handleQuantityChange}
                 />
               )
           )}
         </div>
+        {showConfirmOrder && (
+          <img
+            src="./menu/confirm-button.svg"
+            onClick={confirmOrder}
+            className="w-[37vw] fixed bottom-[30vw] left-[31.5vw]"
+            alt=""
+          />
+        )}
         <div className="h-[36.83vw]"></div>
       </div>
     </div>
