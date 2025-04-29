@@ -1,8 +1,19 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import "notyf/notyf.min.css";
+import { Notyf } from "notyf";
 
 function Navbar() {
   const [showCard, setShowCard] = useState(false);
+  const [notification, setNotification] = useState<Notyf | null>(null);
+
+  useEffect(() => {
+    const notyfInstance = new Notyf({
+      duration: 2000,
+      position: { x: "right", y: "bottom" },
+    });
+    setNotification(notyfInstance);
+  }, []);
 
   if (showCard) {
     return (
@@ -102,7 +113,7 @@ function Navbar() {
           <img
             src="/navbar/key.svg"
             className="w-[20vw]"
-            onClick={() => setShowCard(!showCard)}
+            onClick={() => notification!.success("Coming Soon...")}
             alt=""
           />
           <img
