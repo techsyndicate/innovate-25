@@ -2,10 +2,36 @@
 import React, { useState, useEffect } from "react";
 import "notyf/notyf.min.css";
 import { Notyf } from "notyf";
+import { usePathname } from "next/navigation";
 
 function Navbar() {
   const [showCard, setShowCard] = useState(false);
   const [notification, setNotification] = useState<Notyf | null>(null);
+  const pathname = usePathname();
+
+  let page = "";
+
+  switch (pathname) {
+    case "/":
+      page = "Home";
+      break;
+    case "/menu":
+    case "/order-details":
+    case "/order-details/confirmation":
+      page = "Menu";
+      break;
+    case "/profile":
+    case "/reserve":
+    case "/reserve/confirmation":
+      page = "Profile";
+      break;
+    case "/quests":
+      page = "Quests";
+      break;
+    default:
+      page = "404";
+      break;
+  }
 
   useEffect(() => {
     const notyfInstance = new Notyf({
@@ -99,31 +125,43 @@ function Navbar() {
         <img src="/navbar/nav.svg" className="w-[80vw] " alt="" />
         <div className="flex flex-row justify-between absolute top-[-1.563vh] w-[60vw] left-[10vw]">
           <img
-            src="/navbar/home.svg"
+            src={
+              page === "Home" ? "/navbar/active/home.svg" : `/navbar/home.svg`
+            }
             className="w-[4.5vw]"
             onClick={() => (window.location.href = "/")}
             alt=""
           />
           <img
-            src="/navbar/order.svg"
+            src={
+              page === "Menu" ? "/navbar/active/menu.svg" : `/navbar/order.svg`
+            }
             className="w-[4.8vw]"
             onClick={() => (window.location.href = "/menu")}
             alt=""
           />
           <img
-            src="/navbar/key.svg"
+            src={`/navbar/key.svg`}
             className="w-[20vw]"
             onClick={() => notification!.success("Coming Soon...")}
             alt=""
           />
           <img
-            src="/navbar/merch.svg"
+            src={
+              page === "Quests"
+                ? "/navbar/active/quests.svg"
+                : `/navbar/merch.svg`
+            }
             className="w-[4.7vw]"
             onClick={() => (window.location.href = "/quests")}
             alt=""
           />
           <img
-            src="/navbar/profile.svg"
+            src={
+              page === "Profile"
+                ? "/navbar/active/profile.svg"
+                : `/navbar/profile.svg`
+            }
             className="w-[6.3vw]"
             onClick={() => (window.location.href = "/profile")}
             alt=""
