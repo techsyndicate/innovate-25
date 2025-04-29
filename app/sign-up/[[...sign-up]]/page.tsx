@@ -61,7 +61,7 @@ export default function Page() {
 
       setVerifying(true);
     } catch (err: any) {
-      notification!.error(err.errors[-1].longMessage);
+      notification!.error(err.errors[-1].message);
       // console.log("me gira hua banda", JSON.stringify(err, null, 2));
     }
   };
