@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation";
 import Input from "@/components/Input";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
-import { RainbowButton } from "@/components/RainbowButton";
+// import { RainbowButton } from "@/components/RainbowButton";
+import "notyf/notyf.min.css";
+import { Notyf } from "notyf";
 
 export default function Page() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -19,6 +21,21 @@ export default function Page() {
   const [code, setCode] = useState("");
   const router = useRouter();
   const { user } = useUser();
+  const [notification, setNotification] = React.useState<Notyf | null>(null);
+
+  React.useEffect(() => {
+    const notyfInstance = new Notyf({
+      duration: 2000,
+      position: { x: "right", y: "bottom" },
+    });
+    setNotification(notyfInstance);
+  }, []);
+
+  React.useEffect(() => {
+    if (isLoaded && user) {
+      return router.push("/");
+    }
+  }, [isLoaded, user, router]);
 
   if (user) {
     return router.push("/");
@@ -44,8 +61,8 @@ export default function Page() {
 
       setVerifying(true);
     } catch (err: any) {
-      setError(err.errors[0].message);
-      console.log("me gira hua banda", JSON.stringify(err, null, 2));
+      notification!.error(err.errors[-1].longMessage);
+      // console.log("me gira hua banda", JSON.stringify(err, null, 2));
     }
   };
 
@@ -106,10 +123,14 @@ export default function Page() {
             callback={(e) => setCode(e.target.value)}
           />
           <button
+            className="flex flex-col items-center justify-center"
             type="submit"
-            className="bg-[#651DFF] text-white p-2 rounded-full text-xl h-[7vh]"
           >
-            Verify
+            <img
+              src="/login/go-ahead.svg"
+              className="w-[33.753vw] mt-[5vw]"
+              alt=""
+            />
           </button>
         </form>
       </div>
@@ -118,18 +139,14 @@ export default function Page() {
 
   return (
     <>
-      <img
-        src="./login_blob.png"
-        className="w-[41%] aspect-auto absolute top-[-1vh] left-[-3vh] z-[-10] animate-fadeIn"
-        alt=""
-      />
-      <img
-        src="./login_blob_2.png"
-        className="w-[44%] aspect-auto absolute bottom-[2vh] right-[-2vh] z-[-10] animate-fadeIn"
-        alt=""
-      />
       <div className="flex flex-col items-center justify-center min-h-[100vh] animate-fadeIn">
-        <h1 className="text-3xl font-medium mb-10 text-[#fff]">Register</h1>
+        <h1 className="text-2xl font-medium text-[#fff]">Welcome to</h1>
+        <h1
+          className="text-[9vw] mb-[5vw] font-medium text-[#FFB84D]"
+          style={{ fontFamily: "var(--font-mantinia)" }}
+        >
+          The Lands Between
+        </h1>
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
           <Input
             type="text"
@@ -155,13 +172,20 @@ export default function Page() {
             value={password}
             callback={(e) => setPassword(e.target.value)}
           />
-          <RainbowButton height="7vh" classes="rounded-full" type="submit">
-            Register
-          </RainbowButton>{" "}
-          {error && <p className="text-red-500 w-[80vw]">{error}</p>}
-          <p>
+          <button
+            className="flex flex-col items-center justify-center"
+            type="submit"
+          >
+            <img
+              src="/login/go-ahead.svg"
+              className="w-[33.753vw] mt-[5vw]"
+              alt=""
+            />
+          </button>
+          {/* {error && <p className="text-red-500 w-[60vw]">{error}</p>} */}
+          <p className="text-center">
             Already have an account?{" "}
-            <Link className="font-bold text-[#651DFF]" href={"/sign-in"}>
+            <Link className="font-bold text-[#FFB84D]" href={"/sign-in"}>
               Login
             </Link>
           </p>

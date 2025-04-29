@@ -19,7 +19,7 @@ export default function Input(props: InputProps) {
         name={props.name}
         id={props.name}
         placeholder={props.name}
-        className={`rounded-full w-full h-[6vh] px-7 bg-[#202020] outline-0 text-sm placeholder:font-light placeholder:text-[#8F8F8F] ${props.classes}`}
+        className={`h[80vw]6vh6 px-7 bg-[#[2vw]02020] outline-070707 text border-[#FFB84D] border-sm placeholder:font-light placeholder:text-[#8F8F8F] ${props.classes}`}
         onChange={props.callback}
       />
     </>;
@@ -33,7 +33,7 @@ export default function Input(props: InputProps) {
         name={props.name}
         id={props.name}
         placeholder={props.name}
-        className={`rounded-full w-full h-[6vh] px-7 bg-[#202020] outline-0 text-sm placeholder:font-light placeholder:text-[#8F8F8F] ${props.classes}`}
+        className={`w-[60vw] h-[6vh] px-[2vw] bg-[#070707] border-[#FFB84D] border outline-0 text-sm placeholder:font-light placeholder:text-[#8F8F8F] ${props.classes}`}
         onChange={props.callback}
       />
     </>

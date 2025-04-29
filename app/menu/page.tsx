@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import MenuItem from "@/types/MenuItem";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
+import Loading from "@/components/Loading";
 
 function Menu() {
   const router = useRouter();
@@ -20,6 +21,7 @@ function Menu() {
   const [orderData, setOrderData] = useState([]);
   const [showConfirmOrder, setShowConfirmOrder] = useState(false);
   const [notification, setNotification] = useState<Notyf | null>(null);
+  const [menuLoading, setMenuLoading] = useState(true);
 
   useEffect(() => {
     const notyfInstance = new Notyf({
@@ -102,7 +104,7 @@ function Menu() {
         for (let i = 0; i < data.menu.length; i++) {
           data.menu[i].quantity = 0;
         }
-        console.log(data.menu);
+        setMenuLoading(false);
       } else {
         notification!.error("Failed to fetch menu.");
       }
@@ -115,6 +117,14 @@ function Menu() {
   useEffect(() => {
     getMenu();
   }, [veg, filterByRating, bestseller]);
+
+  if (menuLoading) {
+    return (
+      <div className="flex flex-col w-[100%] h-[100vh] items-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div>

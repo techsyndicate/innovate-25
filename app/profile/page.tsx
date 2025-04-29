@@ -1,13 +1,22 @@
 "use client";
-import Navbar from "@/components/Navbar";
-import React, { useState, useEffect } from "react";
-import { Notyf } from "notyf";
+import React from "react";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import "notyf/notyf.min.css";
+import { Notyf } from "notyf";
+import { MongoUser } from "@/types/MongoUser";
+import Loading from "@/components/Loading";
+import Navbar from "@/components/Navbar";
 import { useClerk } from "@clerk/nextjs";
 
 function Profile() {
   const { signOut } = useClerk();
   const [notification, setNotification] = useState<Notyf | null>(null);
+  const { isLoaded, user } = useUser();
+  const router = useRouter();
+  const [mongoUser, setMongoUser] = useState({} as MongoUser);
+  const [mongoUserLoading, setMongoUserLoading] = useState(true);
 
   useEffect(() => {
     const notyfInstance = new Notyf({
@@ -16,6 +25,37 @@ function Profile() {
     });
     setNotification(notyfInstance);
   }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    fetch("/api/getUser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: user?.primaryEmailAddress?.emailAddress }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.user) {
+          setMongoUserLoading(false);
+          setMongoUser(data.user);
+        } else {
+          console.error("An error occured while fetching user.");
+          setMongoUserLoading(false);
+          return router.push("/sign-in");
+        }
+      });
+  }, [isLoaded, user]);
+
+  if (!isLoaded || mongoUserLoading) {
+    return (
+      <div className="flex flex-col w-[100%] h-[100vh] items-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -26,7 +66,7 @@ function Profile() {
           className="text-[7vw] text-[#FFB84D] mt-[-3vw]"
           style={{ fontFamily: "var(--font-mantinia)" }}
         >
-          Bhavit Grover
+          {mongoUser.name}
         </h1>
 
         <div className="flex flex-col items-center justify-center mt-[5vw] gap-[5vw]">

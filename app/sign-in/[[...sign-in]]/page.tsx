@@ -6,7 +6,10 @@ import { useRouter } from "next/navigation";
 import Input from "@/components/Input";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
-import { RainbowButton } from "@/components/RainbowButton";
+// import { RainbowButton } from "@/components/RainbowButton";
+import Loading from "@/components/Loading";
+import "notyf/notyf.min.css";
+import { Notyf } from "notyf";
 
 export default function SignInForm() {
   const { isLoaded, signIn, setActive } = useSignIn();
@@ -16,6 +19,15 @@ export default function SignInForm() {
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
   const { user } = useUser();
+  const [notification, setNotification] = React.useState<Notyf | null>(null);
+
+  React.useEffect(() => {
+    const notyfInstance = new Notyf({
+      duration: 2000,
+      position: { x: "right", y: "bottom" },
+    });
+    setNotification(notyfInstance);
+  }, []);
 
   React.useEffect(() => {
     if (isLoaded && user) {
@@ -43,8 +55,9 @@ export default function SignInForm() {
         console.error(JSON.stringify(signInAttempt, null, 2));
       }
     } catch (err: any) {
-      setError(err.errors[0].message);
-      console.error(JSON.stringify(err, null, 2));
+      // setError(err.errors[0].message);
+      notification!.error(err.errors[0].message);
+      // console.error(JSON.stringify(err, null, 2));
     } finally {
       setLoading(false);
     }
@@ -53,27 +66,24 @@ export default function SignInForm() {
   if (loading) {
     return (
       <div className="flex flex-col w-[100%] h-[100vh] items-center justify-center">
-        <p>Loading...</p>
+        <Loading />
       </div>
     );
   }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[100vh] animate-fadeIn">
-      <img
-        src="./login_blob.png"
-        className="w-[41%] aspect-auto absolute top-[-1vh] left-[-3vh] z-[-10]"
-        alt=""
-      />
-
-      <img
-        src="./login_blob_2.png"
-        className="w-[44%] aspect-auto absolute bottom-[2vh] right-[-2vh] z-[-10]"
-        alt=""
-      />
-
-      <h1 className="text-2xl mb-0 font-medium text-[#fff]">Welcome to</h1>
-      <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
+      <h1 className="text-2xl font-medium text-[#fff]">Welcome to</h1>
+      <h1
+        className="text-[9vw] mb-[5vw] font-medium text-[#FFB84D]"
+        style={{ fontFamily: "var(--font-mantinia)" }}
+      >
+        The Lands Between
+      </h1>
+      <form
+        className="flex flex-col items-center justify-center space-y-4"
+        onSubmit={handleSubmit}
+      >
         <Input
           name="Enter your email"
           value={email}
@@ -86,13 +96,16 @@ export default function SignInForm() {
           value={password}
           callback={(e) => setPassword(e.target.value)}
         />
-        <RainbowButton height="7vh" classes="rounded-full" type="submit">
-          Login
-        </RainbowButton>
-        {error && <p className="text-red-500">{error}</p>}
+        <img
+          src="/login/go-ahead.svg"
+          className="w-[33.753vw] mt-[5vw]"
+          alt=""
+          onClick={handleSubmit}
+        />
+        {/* {error && <p className="text-red-500 w-[60vw] text-center">{error}</p>} */}
         <p>
           Don&#39;t have an account?
-          <Link className="font-bold text-[#651DFF]" href={"/sign-up"}>
+          <Link className="font-bold text-[#FFB84D]" href={"/sign-up"}>
             &nbsp;Register
           </Link>
         </p>

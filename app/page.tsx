@@ -1,17 +1,48 @@
 "use client";
 import Navbar from "@/components/Navbar";
 import Header from "@/components/Header";
-import React, { useState, TouchEvent } from "react";
-import {useRouter} from 'next/navigation'
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Notyf } from "notyf";
+import { MongoUser } from "@/types/MongoUser";
+import Loading from "@/components/Loading";
+import { useUser } from "@clerk/nextjs";
+import "notyf/notyf.min.css";
 
 export default function Home() {
-  const router = useRouter()
+  const router = useRouter();
   const [activeImage, setActiveImage] = useState(1);
   const [leftPercent, setLeftPercent] = useState(0);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const minSwipeDistance = 50;
   const aiAgents = ["Morgott", "Ranni", "Godrick", "Mohg"];
+  const { isLoaded, user } = useUser();
+  const [mongoUser, setMongoUser] = useState({} as MongoUser);
+  const [mongoUserLoading, setMongoUserLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    fetch("/api/getUser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: user?.primaryEmailAddress?.emailAddress }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.user) {
+          setMongoUserLoading(false);
+          setMongoUser(data.user);
+        } else {
+          console.error("An error occured while fetching user.");
+          setMongoUserLoading(false);
+          return router.push("/sign-in");
+        }
+      });
+  }, [isLoaded, user]);
 
   const onTouchStart = (e: any) => {
     setTouchEnd(null);
@@ -38,6 +69,14 @@ export default function Home() {
       }
     }
   };
+
+  if (!isLoaded || mongoUserLoading) {
+    return (
+      <div className="flex flex-col w-[100%] h-[100vh] items-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -86,7 +125,12 @@ export default function Home() {
         className="w-[25vw] h-[7.5vw] absolute left-[37.5vw] top-[85vw]"
       ></img>
       <div className="top-[85vw] text-[2.75vw] absolute w-[100vw] flex justify-center">
-        <div className="w-[25vw] h-[7.5vw] flex justify-center items-center" onClick={() => {router.push(`/ai/${aiAgents[activeImage - 1].toLowerCase()}`)}}>
+        <div
+          className="w-[25vw] h-[7.5vw] flex justify-center items-center"
+          onClick={() => {
+            router.push(`/ai/${aiAgents[activeImage - 1].toLowerCase()}`);
+          }}
+        >
           {`Talk with ${aiAgents[activeImage - 1]}`}
         </div>
       </div>
@@ -114,15 +158,15 @@ export default function Home() {
       </div>
       <div className="w-[80vw] flex ml-[10vw] my-[2vh] justify-between">
         <div className="mt-[2vw]">
-          <h1 className="text-[4.25vw]">UPCOMING RESERVATION</h1>
-          <div className="flex items-center gap-[1vw] text-[#999]">
+          <h1 className="text-[9vw] text-[#ffb84d]">Hi, {mongoUser.name}</h1>
+          {/* <div className="flex items-center gap-[1vw] text-[#999]">
             <img src="/home/location.png" className="w-[3vw]"></img>
             <p className="text-[3vw]">
               Morgott's Omen King Tandoor, Chandigarh
             </p>
-          </div>
+          </div> */}
         </div>
-        <h1 className="text-[9vw] text-[#ffb84d]">12:45</h1>
+        {/* <h1 className="text-[9vw] text-[#ffb84d]">12:45</h1> */}
       </div>
       <img src="/home/navigate_banner.png" className="mb-[20vh]"></img>
     </div>
