@@ -17,7 +17,15 @@ function OrderDetails() {
   const { isLoaded, user } = useUser();
   const [mongoUser, setMongoUser] = useState({} as MongoUser);
   const [mongoUserLoading, setMongoUserLoading] = useState(true);
-  const notyf = new Notyf();
+  const [notification, setNotification] = useState<Notyf | null>(null);
+
+  useEffect(() => {
+    const notyfInstance = new Notyf({
+      duration: 2000,
+      position: { x: "right", y: "bottom" },
+    });
+    setNotification(notyfInstance);
+  }, []);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -79,7 +87,7 @@ function OrderDetails() {
 
   const handleOrderConfirmation = () => {
     if (!mongoUser?._id) {
-      notyf.error("Please sign in to place an order");
+      notification!.error("Please sign in to place an order");
       return router.push("/sign-in");
     }
 
@@ -96,12 +104,12 @@ function OrderDetails() {
           localStorage.removeItem("orderData");
           router.push("/order-details/confirmation");
         } else {
-          notyf.error("An error occurred while placing the order.");
+          notification!.error("An error occurred while placing the order.");
         }
       })
       .catch((error) => {
         console.error("Error placing order:", error);
-        notyf.error("Network error. Please try again.");
+        notification!.error("Network error. Please try again.");
       });
   };
 

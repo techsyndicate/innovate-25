@@ -17,9 +17,11 @@ export default function SignInForm() {
   const [loading, setLoading] = React.useState(false);
   const { user } = useUser();
 
-  if (isLoaded && user) {
-    return router.push("/");
-  }
+  React.useEffect(() => {
+    if (isLoaded && user) {
+      return router.push("/");
+    }
+  }, [isLoaded, user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

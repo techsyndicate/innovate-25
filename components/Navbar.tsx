@@ -114,7 +114,7 @@ function Navbar() {
           <img
             src="/navbar/profile.svg"
             className="w-[6.3vw]"
-            onClick={() => (window.location.href = "/")}
+            onClick={() => (window.location.href = "/profile")}
             alt=""
           />
         </div>

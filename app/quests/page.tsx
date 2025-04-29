@@ -19,7 +19,15 @@ function Quests() {
   const [mongoUserLoading, setMongoUserLoading] = useState(true);
   const [questsLoading, setQuestsLoading] = useState(true);
   const [quests, setQuests] = useState<any[]>([]);
-  const notyf = new Notyf();
+  const [notification, setNotification] = useState<Notyf | null>(null);
+
+  useEffect(() => {
+    const notyfInstance = new Notyf({
+      duration: 2000,
+      position: { x: "right", y: "bottom" },
+    });
+    setNotification(notyfInstance);
+  }, []);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -57,7 +65,7 @@ function Quests() {
           setQuests(data.quests);
           setQuestsLoading(false);
         } else {
-          notyf.error("Something went wrong. Please try again.");
+          notification!.error("Something went wrong. Please try again.");
           window.location.reload();
         }
       });
@@ -84,7 +92,7 @@ function Quests() {
         if (data.success) {
           window.location.reload();
         } else {
-          notyf.error("Something went wrong. Please try again.");
+          notification!.error("Something went wrong. Please try again.");
         }
       });
   };

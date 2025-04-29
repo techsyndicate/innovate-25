@@ -19,7 +19,15 @@ function Menu() {
   const [searchQuery, setSearchQuery] = useState("");
   const [orderData, setOrderData] = useState([]);
   const [showConfirmOrder, setShowConfirmOrder] = useState(false);
-  const notyf = new Notyf();
+  const [notification, setNotification] = useState<Notyf | null>(null);
+
+  useEffect(() => {
+    const notyfInstance = new Notyf({
+      duration: 2000,
+      position: { x: "right", y: "bottom" },
+    });
+    setNotification(notyfInstance);
+  }, []);
 
   useEffect(() => {
     const hasItemsInOrder = menu.some((item) => item.quantity > 0);
@@ -42,7 +50,7 @@ function Menu() {
     const itemsToOrder = menu.filter((item: any) => item.quantity > 0);
 
     if (itemsToOrder.length === 0) {
-      notyf.error("Kindly select an item before proceeding.");
+      notification!.error("Kindly select an item before proceeding.");
       return;
     }
 
@@ -96,11 +104,11 @@ function Menu() {
         }
         console.log(data.menu);
       } else {
-        notyf.error("Failed to fetch menu.");
+        notification!.error("Failed to fetch menu.");
       }
     } catch (error) {
       console.error("Error fetching menu:", error);
-      notyf.error("Error fetching menu. Please try again later.");
+      notification!.error("Error fetching menu. Please try again later.");
     }
   };
 

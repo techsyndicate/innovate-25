@@ -21,7 +21,15 @@ function Reserve() {
   const [time, setTime] = useState("");
   const [number, setNumber] = useState("1");
   const [available, setAvailable] = useState(false);
-  const notyf = new Notyf();
+  const [notification, setNotification] = useState<Notyf | null>(null);
+
+  useEffect(() => {
+    const notyfInstance = new Notyf({
+      duration: 2000,
+      position: { x: "right", y: "bottom" },
+    });
+    setNotification(notyfInstance);
+  }, []);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -76,7 +84,7 @@ function Reserve() {
     const date = new Date();
     const selectedDate = new Date(event.target.value);
     if (selectedDate < date) {
-      notyf.error("Please select a future date.");
+      notification!.error("Please select a future date.");
     } else {
       setDate(event.target.value);
     }
@@ -101,7 +109,7 @@ function Reserve() {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            notyf.success("Table added successfully!");
+            notification!.success("Table added successfully!");
           } else {
             alert("Failed to add table.");
           }
@@ -129,14 +137,14 @@ function Reserve() {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            notyf.success("Table available!");
+            notification!.success("Table available!");
             setAvailable(true);
           } else {
-            notyf.error(data.message);
+            notification!.error(data.message);
           }
         });
     } else {
-      notyf.error("Please fill in all fields.");
+      notification!.error("Please fill in all fields.");
     }
   };
 
@@ -161,11 +169,11 @@ function Reserve() {
           if (data.success) {
             router.push("/reserve/confirmation");
           } else {
-            notyf.error(data.message);
+            notification!.error(data.message);
           }
         });
     } else {
-      notyf.error("Please check availability before reserving.");
+      notification!.error("Please check availability before reserving.");
     }
   };
 

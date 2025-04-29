@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 
@@ -8,7 +8,15 @@ function AddQuest() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [questNumber, setQuestNumber] = useState(1);
-  const notyf = new Notyf();
+  const [notification, setNotification] = useState<Notyf | null>(null);
+
+  useEffect(() => {
+    const notyfInstance = new Notyf({
+      duration: 2000,
+      position: { x: "right", y: "bottom" },
+    });
+    setNotification(notyfInstance);
+  }, []);
 
   const newQuest = () => {
     fetch("/api/quest/add", {
@@ -27,7 +35,7 @@ function AddQuest() {
         if (data.success) {
           window.location.reload();
         } else {
-          notyf.error(data.message);
+          notification!.error(data.message);
         }
       });
   };
