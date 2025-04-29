@@ -97,24 +97,30 @@ function Quests() {
       });
   };
 
-  // fetch('/api/questComplete', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json'
-  //   },
-  //   body: JSON.stringify({
-  //     email: mongoUser.email,
-  //     level: 1
-  //   })
-  // })
-  // .then(resp => resp.json())
-  // .then(data => {
-  //   if (!data.success) {
-  //     alert(data.message)
-  //   } else {
-  //     window.location.reload()
-  //   }
-  // })
+  const handleQuestComplete = () => {
+    if (window.confirm("Are you sure you want to complete this quest?")) {
+      fetch('/api/quest/complete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: mongoUser.email,
+          level: currentLevel+1
+        })
+      })
+      .then(resp => resp.json())
+      .then(data => {
+        if (!data.success) {
+          alert(data.message)
+        } else {
+          window.location.reload()
+        }
+      })
+    } else {
+      console.log('na ho jave')
+    }
+  }
 
   if (!mongoUser.seenQuests) {
     return (
@@ -182,14 +188,14 @@ function Quests() {
           </QuestProgressIcon>
         </div>
         <div
-          className="fixed left-0 bottom-0 w-[100vw] h-[40vh]"
+          className="fixed left-0 bottom-0 w-[100vw] h-[40vh] z-[1]"
           style={{
             backgroundImage:
               "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.7), black)",
             pointerEvents: "none",
           }}
         ></div>
-        <div className="relative w-[85vw] h-[30vw] mt-[10vw] z-[-2]">
+        <div className="relative w-[85vw] h-[30vw] mt-[10vw]" onClick={() => handleQuestComplete()}>
           <img
             src="/quest/grey_box.svg"
             className="absolute top-0 left-0 w-[85vw]"
@@ -221,7 +227,7 @@ function Quests() {
           </div>
         </div>
         {mongoUser.completedQuests.map((quest) => (
-          <div className="relative w-[85vw] h-[30vw] mt-[10vw] z-[-2]">
+          <div className="relative w-[85vw] h-[30vw] mt-[10vw]">
             <img
               src="/quest/orange_box.svg"
               className="absolute top-0 left-0 w-[85vw]"
