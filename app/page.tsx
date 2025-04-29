@@ -168,7 +168,7 @@ export default function Home() {
         </div>
         {/* <h1 className="text-[9vw] text-[#ffb84d]">12:45</h1> */}
       </div>
-      <img src="/home/navigate_banner.png" className="mb-[20vh]"></img>
+      <img src="/home/navigate_banner.png" className="mb-[20vh]" onClick={() => router.push("https://maps.app.goo.gl/XyvaVhc5FfKbt4tLA")}></img>
     </div>
   );
 }

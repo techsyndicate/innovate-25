@@ -130,6 +130,14 @@ function Menu() {
     <div>
       <Header />
       <Navbar />
+      <div
+        className="fixed left-0 bottom-0 w-[100vw] h-[40vh] z-[1]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.7), black)",
+          pointerEvents: "none",
+        }}
+      ></div>
 
       <h1
         style={{
@@ -183,7 +191,7 @@ function Menu() {
           alt=""
         />
       </div>
-      <div className="">
+      <div className="mb-[10vh]">
         <div className="flex flex-col gap-[4.33vw] mt-[8.66vw] ml-[10vw]">
           <h1 className="text-[7vw]">Appetizers</h1>
           {menu.map(
@@ -247,7 +255,7 @@ function Menu() {
           <img
             src="./menu/confirm-button.svg"
             onClick={confirmOrder}
-            className="w-[37vw] fixed bottom-[30vw] left-[31.5vw]"
+            className="w-[37vw] fixed bottom-[32vw] left-[31.5vw] z-[10]"
             alt=""
           />
         )}
