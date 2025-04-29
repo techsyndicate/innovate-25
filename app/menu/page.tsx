@@ -6,6 +6,8 @@ import Navbar from "@/components/Navbar";
 import MenuItemCard from "@/components/MenuItemCard";
 import { useRouter } from "next/navigation";
 import MenuItem from "@/types/MenuItem";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 function Menu() {
   const router = useRouter();
@@ -17,6 +19,7 @@ function Menu() {
   const [searchQuery, setSearchQuery] = useState("");
   const [orderData, setOrderData] = useState([]);
   const [showConfirmOrder, setShowConfirmOrder] = useState(false);
+  const notyf = new Notyf();
 
   useEffect(() => {
     const hasItemsInOrder = menu.some((item) => item.quantity > 0);
@@ -39,7 +42,7 @@ function Menu() {
     const itemsToOrder = menu.filter((item: any) => item.quantity > 0);
 
     if (itemsToOrder.length === 0) {
-      alert("Kindly select an item before proceeding.");
+      notyf.error("Kindly select an item before proceeding.");
       return;
     }
 
@@ -93,11 +96,11 @@ function Menu() {
         }
         console.log(data.menu);
       } else {
-        alert("Failed to fetch menu.");
+        notyf.error("Failed to fetch menu.");
       }
     } catch (error) {
       console.error("Error fetching menu:", error);
-      alert("Error fetching menu. Please try again later.");
+      notyf.error("Error fetching menu. Please try again later.");
     }
   };
 

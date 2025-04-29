@@ -1,15 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 function AddQuest() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [questNumber, setQuestNumber] = useState(1);
+  const notyf = new Notyf();
 
   const newQuest = () => {
     fetch("/api/quest/add", {
-      method: 'POST',
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -19,14 +22,14 @@ function AddQuest() {
         questNumber,
       }),
     })
-    .then(resp => resp.json())
-    .then(data => {
-      if (data.success) {
-        window.location.reload()
-      } else {
-        alert(data.message)
-      }
-    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data.success) {
+          window.location.reload();
+        } else {
+          notyf.error(data.message);
+        }
+      });
   };
 
   return (

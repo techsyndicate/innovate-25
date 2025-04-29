@@ -7,6 +7,8 @@ import "notyf/notyf.min.css";
 import { Notyf } from "notyf";
 import { MongoUser } from "@/types/MongoUser";
 import Loading from "@/components/Loading";
+import Header from "@/components/Header";
+import Navbar from "@/components/Navbar";
 
 function Reserve() {
   const { isLoaded, user } = useUser();
@@ -15,10 +17,11 @@ function Reserve() {
   const [mongoUserLoading, setMongoUserLoading] = useState(true);
   const [restaurant, setRestaurant] = useState("");
   const [people, setPeople] = useState("1");
-  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const [time, setTime] = useState("00:01");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
   const [number, setNumber] = useState("1");
   const [available, setAvailable] = useState(false);
+  const notyf = new Notyf();
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -55,7 +58,10 @@ function Reserve() {
     setRestaurant(event.target.value);
   };
 
-  const handlePeopleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePeopleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    if (available) {
+      setAvailable(false);
+    }
     setPeople(event.target.value);
   };
 
@@ -64,16 +70,22 @@ function Reserve() {
   };
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (available) {
+      setAvailable(false);
+    }
     const date = new Date();
     const selectedDate = new Date(event.target.value);
     if (selectedDate < date) {
-      alert("Please select a future date.");
+      notyf.error("Please select a future date.");
     } else {
       setDate(event.target.value);
     }
   };
 
   const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (available) {
+      setAvailable(false);
+    }
     setTime(event.target.value);
   };
 
@@ -89,7 +101,7 @@ function Reserve() {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            alert("Table added successfully!");
+            notyf.success("Table added successfully!");
           } else {
             alert("Failed to add table.");
           }
@@ -100,7 +112,7 @@ function Reserve() {
   };
 
   const handleCheck = () => {
-    if (restaurant && date && time && people) {
+    if (date && time && people) {
       fetch("/api/check", {
         method: "POST",
         headers: {
@@ -108,7 +120,7 @@ function Reserve() {
         },
         body: JSON.stringify({
           email: mongoUser.email,
-          restaurant,
+          restaurant: "Morgott’s Omen King Tandoor",
           date,
           time,
           people,
@@ -117,14 +129,14 @@ function Reserve() {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            alert("Table available!");
+            notyf.success("Table available!");
             setAvailable(true);
           } else {
-            alert(data.message);
+            notyf.error(data.message);
           }
         });
     } else {
-      alert("Please fill in all fields.");
+      notyf.error("Please fill in all fields.");
     }
   };
 
@@ -137,7 +149,7 @@ function Reserve() {
         },
         body: JSON.stringify({
           userId: mongoUser._id,
-          restaurant,
+          restaurant: "Morgott’s Omen King Tandoor",
           date,
           time,
           people,
@@ -147,19 +159,77 @@ function Reserve() {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            alert("Reservation successful!");
+            router.push("/reserve/confirmation");
           } else {
-            alert(data.message);
+            notyf.error(data.message);
           }
         });
     } else {
-      alert("Please check availability before reserving.");
+      notyf.error("Please check availability before reserving.");
     }
   };
 
+  const peopleUi = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+
   return (
     <div>
-      <h1>CHOOSE A RESTAURANT TO MAKE RESERVATION IN</h1>
+      <Navbar />
+      <Header />
+      <div className="ml-[10vw]">
+        <h1
+          className="text-[9vw] text-[#FFB84D]"
+          style={{ fontFamily: "var(--font-mantinia)" }}
+        >
+          Reserve Table
+        </h1>
+        <p className="text-[rgba(255,255,255,0.6)]">
+          Morgott’s Omen King Tandoor, Chandigarh
+        </p>
+        <div className="mt-[5vw]">
+          <p className="text-[#FFB84D] text-[6vw]">Number of guests</p>
+          <div className="">
+            <select
+              value={people}
+              onChange={(e) => handlePeopleChange(e)}
+              className="bg-[#1E1E2F] my-[2vw] text-[#FFB84D] text-[5vw] px-[3vw] w-[60vw] h-[12vw] rounded-md appearance-none outline-none"
+            >
+              {peopleUi.map((person) => (
+                <option key={person} value={person}>
+                  {person}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className="mt-[5vw]">
+          <p className="text-[#FFB84D] text-[6vw]">Date</p>
+          <input
+            type="date"
+            onChange={handleDateChange}
+            value={date}
+            className="bg-[#1E1E2F] my-[2vw] text-[#FFB84D] text-[5vw] px-[3vw] w-[60vw] h-[12vw] rounded-md appearance-none outline-none"
+          />
+        </div>
+        <div className="mt-[5vw]">
+          <p className="text-[#FFB84D] text-[6vw]">Time (24 hour)</p>
+          <input
+            type="time"
+            value={time}
+            onChange={(e) => handleTimeChange(e)}
+            className="bg-[#1E1E2F] my-[2vw] text-[#FFB84D] text-[5vw] px-[3vw] w-[60vw] h-[12vw] rounded-md appearance-none outline-none"
+          />
+        </div>
+      </div>
+      {time && date && people && (
+        <img
+          src={available ? "./reserve/confirm.svg" : "./reserve/check.svg"}
+          className="w-[40vw] left-[30vw] bottom-[30vw] absolute"
+          alt=""
+          onClick={available ? handleReserve : handleCheck}
+        />
+      )}
+
+      {/* <h1>CHOOSE A RESTAURANT TO MAKE RESERVATION IN</h1>
       <select value={restaurant} onChange={(e) => handleChange(e)}>
         <option value="">Select a restaurant</option>
         <option value="Godrick’s Grafted Grill">
@@ -232,7 +302,7 @@ function Reserve() {
           <button onClick={handleReserve}>Reserve</button>
         </div>
       )}
-      <br />
+      <br /> */}
     </div>
   );
 }

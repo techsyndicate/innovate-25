@@ -8,6 +8,8 @@ import { useUser } from "@clerk/nextjs";
 import QuestProgressIcon from "@/components/QuestProgressIcon";
 import Quest from "@/models/questSchema";
 import Loading from "@/components/Loading";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 function Quests() {
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -17,6 +19,7 @@ function Quests() {
   const [mongoUserLoading, setMongoUserLoading] = useState(true);
   const [questsLoading, setQuestsLoading] = useState(true);
   const [quests, setQuests] = useState<any[]>([]);
+  const notyf = new Notyf();
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -54,7 +57,7 @@ function Quests() {
           setQuests(data.quests);
           setQuestsLoading(false);
         } else {
-          alert("Something went wrong. Please try again.");
+          notyf.error("Something went wrong. Please try again.");
           window.location.reload();
         }
       });
@@ -81,7 +84,7 @@ function Quests() {
         if (data.success) {
           window.location.reload();
         } else {
-          alert("Something went wrong. Please try again.");
+          notyf.error("Something went wrong. Please try again.");
         }
       });
   };
