@@ -82,6 +82,14 @@ export default function Home() {
     <div>
       <Navbar />
       <Header />
+      <div
+        className="fixed left-0 bottom-0 w-[100vw] h-[40vh] z-[1]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.7), black)",
+          pointerEvents: "none",
+        }}
+      ></div>
       <img
         src="/home/homepage_header.png"
         className="absolute top-0 left-0 w-[100vw] z-[-1]"
@@ -168,7 +176,11 @@ export default function Home() {
         </div>
         {/* <h1 className="text-[9vw] text-[#ffb84d]">12:45</h1> */}
       </div>
-      <img src="/home/navigate_banner.png" className="mb-[20vh]" onClick={() => router.push("https://maps.app.goo.gl/XyvaVhc5FfKbt4tLA")}></img>
+      <img
+        src="/home/navigate_banner.png"
+        className="mb-[20vh]"
+        onClick={() => router.push("https://maps.app.goo.gl/XyvaVhc5FfKbt4tLA")}
+      ></img>
     </div>
   );
 }
