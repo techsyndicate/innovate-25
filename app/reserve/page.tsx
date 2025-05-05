@@ -183,6 +183,14 @@ function Reserve() {
     <div>
       <Navbar />
       <Header />
+      <div
+        className="fixed left-0 bottom-0 w-[100vw] h-[40vh] z-[1]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.7), black)",
+          pointerEvents: "none",
+        }}
+      ></div>
       <div className="ml-[10vw]">
         <h1
           className="text-[9vw] text-[#FFB84D]"
@@ -231,7 +239,7 @@ function Reserve() {
       {time && date && people && (
         <img
           src={available ? "./reserve/confirm.svg" : "./reserve/check.svg"}
-          className="w-[40vw] left-[30vw] bottom-[30vw] absolute"
+          className="w-[40vw] left-[30vw] bottom-[30vw] fixed z-[1000]"
           alt=""
           onClick={available ? handleReserve : handleCheck}
         />

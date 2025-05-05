@@ -39,7 +39,7 @@ body {
 }
 
 .inactiveSliderButton {
-  opacity: 0.3
+  opacity: 0.3;
 }
 
 @keyframes bounce {
@@ -52,5 +52,23 @@ body {
   }
   100% {
     transform: translateY(0);
+  }
+}
+
+@keyframes slideRight {
+  0% {
+    left: 2vw;
+  }
+  100% {
+    left: 42vw;
+  }
+}
+
+@keyframes disappear {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }

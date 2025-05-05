@@ -13,11 +13,36 @@ import Loading from "@/components/Loading";
 function OrderDetails() {
   const [orderData, setOrderData] = useState<any>(null);
   const [restaurant, setRestaurant] = useState("");
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const minSwipeDistance = 50;
   const router = useRouter();
   const { isLoaded, user } = useUser();
   const [mongoUser, setMongoUser] = useState({} as MongoUser);
   const [mongoUserLoading, setMongoUserLoading] = useState(true);
   const [notification, setNotification] = useState<Notyf | null>(null);
+  const [slideStatus, setSlideStatus] = useState(false);
+
+  const onTouchStart = (e: any) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: any) => setTouchEnd(e.targetTouches[0].clientX);
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isRightSwipe = distance < -minSwipeDistance;
+    const isLeftSwipe = distance > minSwipeDistance;
+    if (isRightSwipe) {
+      setSlideStatus(true);
+      setTimeout(() => {
+        notification!.success('Confirmed! Please wait...')
+        handleOrderConfirmation()
+      }, 300)
+    }
+  };
 
   useEffect(() => {
     const notyfInstance = new Notyf({
@@ -201,12 +226,34 @@ function OrderDetails() {
       </div>
 
       <div className="flex flex-row gap-4 mx-[10vw] mt-[8vw] mb-[15vw]">
-        <img
-          src="./menu/place-order.svg"
-          className="w-[80vw]"
-          onClick={handleOrderConfirmation}
-          alt="Place order button"
-        />
+        <div className="w-[60vw] relative ml-[10vw]">
+          <img
+            src="/order_img/orderbtn.svg"
+            className="w-[60vw] relative"
+            onClick={handleOrderConfirmation}
+            alt="Place order button"
+          />
+          <img
+            src="/order_img/orderslider.svg"
+            className={`left-[2vw] w-[15vw] absolute top-[1.5vw] z-[100] ${
+              slideStatus
+                ? "[animation-name:slideRight] [animation-duration:0.3s] [animation-fill-mode:forwards]"
+                : ""
+            }`}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          ></img>
+          <div
+            className={`w-[47vw] absolute right-[0] text-center top-0 h-[100%] flex items-center justify-center ${
+              slideStatus
+                ? "[animation-name:disappear] [animation-duration:0.3s] [animation-fill-mode:forwards]"
+                : ""
+            }`}
+          >
+            Slide to place order
+          </div>
+        </div>
       </div>
       <div className="h-[20vw]"></div>
     </div>

@@ -9,7 +9,7 @@ function Loading() {
     const interval = setInterval(() => {
       setClockwiseRotation((prev) => (prev + 45) % 360);
       setCounterRotation((prev) => (prev - 45) % 360);
-    }, 1000);
+    }, 600);
 
     return () => clearInterval(interval);
   }, []);
