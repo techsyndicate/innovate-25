@@ -38,9 +38,9 @@ function OrderDetails() {
     if (isRightSwipe) {
       setSlideStatus(true);
       setTimeout(() => {
-        notification!.success('Confirmed! Please wait...')
-        handleOrderConfirmation()
-      }, 300)
+        notification!.success("Confirmed! Please wait...");
+        handleOrderConfirmation();
+      }, 300);
     }
   };
 
@@ -169,6 +169,14 @@ function OrderDetails() {
     <div>
       <Navbar />
       <Header />
+      <div
+        className="fixed left-0 bottom-0 w-[100vw] h-[40vh] z-[1]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.7), black)",
+          pointerEvents: "none",
+        }}
+      ></div>
       <h1
         style={{
           fontFamily: "var(--font-mantinia)",
@@ -229,13 +237,13 @@ function OrderDetails() {
         <div className="w-[60vw] relative ml-[10vw]">
           <img
             src="/order_img/orderbtn.svg"
-            className="w-[60vw] relative"
+            className="w-[60vw] relative z-[0]"
             onClick={handleOrderConfirmation}
             alt="Place order button"
           />
           <img
             src="/order_img/orderslider.svg"
-            className={`left-[2vw] w-[15vw] absolute top-[1.5vw] z-[100] ${
+            className={`left-[2vw] w-[15vw] absolute top-[1.5vw] z-[1] ${
               slideStatus
                 ? "[animation-name:slideRight] [animation-duration:0.3s] [animation-fill-mode:forwards]"
                 : ""
@@ -255,7 +263,7 @@ function OrderDetails() {
           </div>
         </div>
       </div>
-      <div className="h-[20vw]"></div>
+      <div className="h-[20vh]"></div>
     </div>
   );
 }

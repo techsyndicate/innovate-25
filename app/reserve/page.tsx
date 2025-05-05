@@ -207,7 +207,7 @@ function Reserve() {
             <select
               value={people}
               onChange={(e) => handlePeopleChange(e)}
-              className="bg-[#1E1E2F] my-[2vw] text-[#FFB84D] text-[5vw] px-[3vw] w-[60vw] h-[12vw] rounded-md appearance-none outline-none"
+              className="[border:1px_solid_white] bg-[transparent] my-[2vw] text-[#FFB84D] text-[5vw] px-[3vw] w-[60vw] h-[12vw] rounded-md appearance-none outline-none"
             >
               {peopleUi.map((person) => (
                 <option key={person} value={person}>
@@ -223,7 +223,7 @@ function Reserve() {
             type="date"
             onChange={handleDateChange}
             value={date}
-            className="bg-[#1E1E2F] my-[2vw] text-[#FFB84D] text-[5vw] px-[3vw] w-[60vw] h-[12vw] rounded-md appearance-none outline-none"
+            className="[border:1px_solid_white] bg-[transparent] my-[2vw] text-[5vw] px-[3vw] w-[60vw] h-[12vw] rounded-md appearance-none outline-none"
           />
         </div>
         <div className="mt-[5vw]">
@@ -232,7 +232,7 @@ function Reserve() {
             type="time"
             value={time}
             onChange={(e) => handleTimeChange(e)}
-            className="bg-[#1E1E2F] my-[2vw] text-[#FFB84D] text-[5vw] px-[3vw] w-[60vw] h-[12vw] rounded-md appearance-none outline-none"
+            className="[border:1px_solid_white] bg-[transparent] my-[2vw] text-[5vw] px-[3vw] w-[60vw] h-[12vw] rounded-md appearance-none outline-none"
           />
         </div>
       </div>
@@ -319,6 +319,7 @@ function Reserve() {
         </div>
       )}
       <br /> */}
+      <div className="h-[20vh]"></div>
     </div>
   );
 }
